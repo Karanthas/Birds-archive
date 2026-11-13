@@ -1,0 +1,1108 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-14",
+  "scope": "公开来源探针；未运行识别、上传私人照片、调用付费API或缓存未授权正文/图片。",
+  "representatives": [
+    {
+      "id": "little_egret",
+      "scientific_name": "Egretta garzetta",
+      "reference_label": "白鹭",
+      "concept_id": "avibase-F2858F9F",
+      "scenarios": [
+        "common_guangdong",
+        "common_jiangsu",
+        "similar_species",
+        "multi_bird"
+      ]
+    },
+    {
+      "id": "great_egret",
+      "scientific_name": "Ardea alba",
+      "reference_label": "大白鹭",
+      "concept_id": "avibase-49D9148A",
+      "scenarios": [
+        "similar_species",
+        "multi_bird"
+      ]
+    },
+    {
+      "id": "intermediate_egret",
+      "scientific_name": "Ardea intermedia",
+      "reference_label": "中白鹭",
+      "concept_id": "avibase-30785911",
+      "scenarios": [
+        "similar_species",
+        "multi_bird"
+      ]
+    },
+    {
+      "id": "light_vented_bulbul",
+      "scientific_name": "Pycnonotus sinensis",
+      "reference_label": "白头鹎",
+      "concept_id": "avibase-BB5650EB",
+      "scenarios": [
+        "common_guangdong",
+        "common_jiangsu",
+        "similar_species"
+      ]
+    },
+    {
+      "id": "red_whiskered_bulbul",
+      "scientific_name": "Pycnonotus jocosus",
+      "reference_label": "红耳鹎",
+      "concept_id": "avibase-F9E37510",
+      "scenarios": [
+        "common_guangdong",
+        "similar_species"
+      ]
+    },
+    {
+      "id": "northern_cardinal",
+      "scientific_name": "Cardinalis cardinalis",
+      "reference_label": "主红雀（资料用名，未导入）",
+      "concept_id": "avibase-4E74AE22",
+      "scenarios": [
+        "overseas"
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "id": "catalog_fixed",
+      "species": null,
+      "scenario": "global",
+      "field": "catalog",
+      "source_url": "https://www.avilist.org/checklist/v2025b/",
+      "checked_at": "2026-10-14",
+      "status": "verified",
+      "evidence_summary": "官方v2025b发布2026-06-11；Explorer版本文件、实际扩展列/全量数据已下载核对；33684分类行，其中11131物种、19879亚种、46目/252科/2376属，与官网v2025总量及b仅辅助字段修订相符。",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "terms": "CC BY 4.0，保存署名、来源链接、版本和改动说明",
+      "cache_permission": "allowed_with_attribution",
+      "gap": "中文名未包含；概念ID只作为此固定快照外部映射，不假定未来版本不拆并。",
+      "alternative": "Phase2/5更新先dry-run；逐概念一对一证据才复用UUID。",
+      "version": "v2025b",
+      "csv_sha256": "c03d5fbcfe18d75ce08f08d3bd4c03f056ced508cbc1b27a6c6d25a5220e2250",
+      "row_count": 33684,
+      "species_count": 11131,
+      "data_url": "https://explore.avilist.org/data/avilist-2025b.json",
+      "versions_url": "https://explore.avilist.org/versions.json",
+      "exporter_url": "https://explore.avilist.org/assets/index-C_TvU6MI.js",
+      "method": "官方Explorer数据经其扩展列映射/实体净化/CSV规则导出；未解析XLSX；小合成测试文件另存。"
+    },
+    {
+      "id": "model_weights",
+      "species": null,
+      "scenario": "local_cpu",
+      "field": "weights",
+      "source_url": "https://huggingface.co/api/models/imageomics/bioclip-2",
+      "checked_at": "2026-10-14",
+      "status": "verified",
+      "evidence_summary": "官方API返回revision 2957b322090f9cb17ae72c71981c7218a28d81e0、MIT模型卡和open_clip_model.safetensors。仅查询metadata，未下载/执行权重。",
+      "license_url": "https://huggingface.co/imageomics/bioclip-2/blob/2957b322090f9cb17ae72c71981c7218a28d81e0/README.md",
+      "terms": "模型卡MIT；下载前复核固定文件许可与哈希；训练数据/照片各自许可不随模型MIT转移。",
+      "cache_permission": "allowed_with_attribution",
+      "gap": "权重内容摘要、安装依赖、NAS实际兼容性/内存/耗时/准确率未验证。",
+      "alternative": "Phase3先核对固定权重哈希与依赖，再CPU隔离评测，不计入未验证AMD加速。",
+      "revision": "2957b322090f9cb17ae72c71981c7218a28d81e0",
+      "weight_url": "https://huggingface.co/imageomics/bioclip-2/resolve/2957b322090f9cb17ae72c71981c7218a28d81e0/open_clip_model.safetensors",
+      "executed": false
+    },
+    {
+      "id": "model_cpu",
+      "species": null,
+      "scenario": "local_cpu",
+      "field": "cpu_entry",
+      "source_url": "https://imageomics.github.io/pybioclip/python-api/",
+      "checked_at": "2026-10-14",
+      "status": "verified",
+      "evidence_summary": "BaseClassifier文档默认device='cpu'；官方CLI文档可选cpu，模型标识hf-hub:imageomics/bioclip-2。",
+      "license_url": "https://github.com/Imageomics/pybioclip/blob/main/LICENSE",
+      "terms": "工具许可与权重分开，使用前固定工具版本并复核MIT声明。",
+      "cache_permission": "not_applicable",
+      "gap": "没有安装工具、运行任何用户JPEG或在NAS测量。",
+      "alternative": "Phase3固定工具版本/模型revision后按同组标注样片测量。",
+      "executed": false
+    },
+    {
+      "id": "model_accuracy",
+      "species": null,
+      "scenario": "multi_bird",
+      "field": "accuracy",
+      "source_url": "https://huggingface.co/imageomics/bioclip-2",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "通用模型卡性能不是此图库证据；多鸟种完整/部分命中率无实际样片结果。",
+      "license_url": "https://huggingface.co/imageomics/bioclip-2",
+      "terms": "模型声明不构成用户场景保证。",
+      "cache_permission": "not_applicable",
+      "gap": "用户标注样片、同意与NAS评测尚未配置。",
+      "alternative": "Phase3记录常见/相似/多鸟/海外覆盖、人工操作数、时间、峰值内存和Top1/3；原始分数不当概率。",
+      "executed": false
+    },
+    {
+      "id": "cloud_entry",
+      "species": null,
+      "scenario": "cloud",
+      "field": "service_entry",
+      "source_url": "https://ai.baidu.com/tech/imagerecognition/animal",
+      "checked_at": "2026-10-14",
+      "status": "verified",
+      "evidence_summary": "官方动物识别API支持上传一张图片返回名称及百科；页面称近8000动物种类，不能外推全球鸟种充分覆盖。",
+      "license_url": "https://ai.baidu.com/ai-doc/REFERENCE/kk3dwjg7d",
+      "terms": "协议2022-08-09：须有权上传/处理业务数据；存在服务、法律与另行同意使用例外，条款可变。",
+      "cache_permission": "not_applicable",
+      "gap": "账号/实名/凭证/地域、保留规则、学名映射与多鸟能力未核实；未请求识别。",
+      "alternative": "Phase3用户配置样片范围、上传同意及费用上限后受控评测；无云配置继续本地手动流程。",
+      "executed": false
+    },
+    {
+      "id": "cloud_price",
+      "species": null,
+      "scenario": "cloud",
+      "field": "pricing",
+      "source_url": "https://cloud.baidu.com/product-price/imagerecognition.html",
+      "checked_at": "2026-10-14",
+      "status": "verified",
+      "evidence_summary": "核查动物识别按量首档0<月<=5万次为¥1.0/千；单张单次50张算术¥0.05仅估算。",
+      "license_url": "https://ai.baidu.com/ai-doc/REFERENCE/kk3dwjg7d",
+      "terms": "实施时重新核价/地区/账户优惠、重试与额外费用。",
+      "cache_permission": "not_applicable",
+      "gap": "没有实际账单/调用次数证据，报价可能变。",
+      "alternative": "Phase3固定日期与价格，记录实际请求数和费用；设置预算，未获同意不上传。",
+      "executed": false
+    },
+    {
+      "id": "chinese_ebird",
+      "species": null,
+      "scenario": "global",
+      "field": "name_license",
+      "source_url": "https://support.ebird.org/en/support/solutions/articles/48000804865",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "官方zh_SIM仅中国已知种，域外回退IOC英文；名称矩阵v2025(2025-10-30)可取得，概念须以taxon_concept_identifier对齐。",
+      "license_url": "https://support.ebird.org/en/support/solutions/articles/48000804865",
+      "terms": "入口未建立名称矩阵再分发/缓存开放许可。",
+      "cache_permission": "permission_required",
+      "gap": "完整名称文件许可与逐概念映射未核实；英文非中文。",
+      "alternative": "Phase3/5向Cornell确认授权与概念映射；当前学名+中文名暂缺。"
+    },
+    {
+      "id": "chinese_wikidata",
+      "species": null,
+      "scenario": "global",
+      "field": "name_license",
+      "source_url": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "结构化数据CC0；P2026为Avibase概念ID，允许的候选路径不是实际已导入中文证据。",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "terms": "仅结构化label；网页正文/图片许可另查。",
+      "cache_permission": "allowed_cc0",
+      "gap": "未核实逐条当前species-rank/QID/revision/nondeprecated P2026与AviList字节一致，不能只用学名join。",
+      "alternative": "Phase5逐条AvibaseID同概念核验，记录QID/revision/time/zh-Hans，拒绝多匹配或概念歧义。"
+    },
+    {
+      "id": "little_egret_name",
+      "species": "Egretta garzetta",
+      "scenario": [
+        "common_guangdong",
+        "common_jiangsu",
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "name",
+      "source_url": "https://lyj.dg.gov.cn/mhlh/content/post_4380004.html",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "资料入口使用名称“白鹭”；全量真实名录当前没有中文名称。",
+      "license_url": "https://lyj.dg.gov.cn/mhlh/content/post_4380004.html",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "此页面名称/学名不足以证明同一概念；未取得可导入中文名称许可。",
+      "alternative": "按chinese_wikidata或chinese_ebird流程核验许可、概念与版本后逐条导入。",
+      "concept_id": "avibase-F2858F9F",
+      "source_date": "2025-05-09"
+    },
+    {
+      "id": "little_egret_appearance",
+      "species": "Egretta garzetta",
+      "scenario": [
+        "common_guangdong",
+        "common_jiangsu",
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "appearance",
+      "source_url": "https://lyj.dg.gov.cn/mhlh/content/post_4380004.html",
+      "checked_at": "2026-10-14",
+      "status": "verified",
+      "evidence_summary": "该官页写出学名及中文外形、湿地活动/食物、江苏/广东与海外分布；相似种指出脚趾颜色。",
+      "license_url": "https://lyj.dg.gov.cn/mhlh/content/post_4380004.html",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-F2858F9F",
+      "source_date": "2025-05-09"
+    },
+    {
+      "id": "little_egret_habits",
+      "species": "Egretta garzetta",
+      "scenario": [
+        "common_guangdong",
+        "common_jiangsu",
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "habits",
+      "source_url": "https://lyj.dg.gov.cn/mhlh/content/post_4380004.html",
+      "checked_at": "2026-10-14",
+      "status": "verified",
+      "evidence_summary": "该官页写出学名及中文外形、湿地活动/食物、江苏/广东与海外分布；相似种指出脚趾颜色。",
+      "license_url": "https://lyj.dg.gov.cn/mhlh/content/post_4380004.html",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-F2858F9F",
+      "source_date": "2025-05-09"
+    },
+    {
+      "id": "little_egret_distribution",
+      "species": "Egretta garzetta",
+      "scenario": [
+        "common_guangdong",
+        "common_jiangsu",
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "distribution",
+      "source_url": "https://lyj.dg.gov.cn/mhlh/content/post_4380004.html",
+      "checked_at": "2026-10-14",
+      "status": "verified",
+      "evidence_summary": "该官页写出学名及中文外形、湿地活动/食物、江苏/广东与海外分布；相似种指出脚趾颜色。",
+      "license_url": "https://lyj.dg.gov.cn/mhlh/content/post_4380004.html",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-F2858F9F",
+      "source_date": "2025-05-09"
+    },
+    {
+      "id": "little_egret_similar_species",
+      "species": "Egretta garzetta",
+      "scenario": [
+        "common_guangdong",
+        "common_jiangsu",
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "similar_species",
+      "source_url": "https://lyj.dg.gov.cn/mhlh/content/post_4380004.html",
+      "checked_at": "2026-10-14",
+      "status": "verified",
+      "evidence_summary": "该官页实际比较白鹭黄色脚趾与中白鹭黑色脚趾；季节与概念范围仍需资料编辑核对。",
+      "license_url": "https://lyj.dg.gov.cn/mhlh/content/post_4380004.html",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-F2858F9F",
+      "source_date": "2025-05-09"
+    },
+    {
+      "id": "little_egret_global_conservation",
+      "species": "Egretta garzetta",
+      "scenario": [
+        "common_guangdong",
+        "common_jiangsu",
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "global_conservation",
+      "source_url": "https://www.avilist.org/checklist/v2025b/",
+      "checked_at": "2026-10-14",
+      "status": "verified",
+      "evidence_summary": "实际固定v2025b行 avibase-F2858F9F 的 IUCN_Red_List_Category=NE；此版本未评估，不能据此称无保护。 资料日期2026-06-11。",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "terms": "AviList CC BY4.0固定快照；来源IUCN体系与国家/地区法律分别展示。",
+      "cache_permission": "allowed_with_attribution",
+      "gap": "实时IUCN评估尚未获取；不把名录日期当该物种评估日期。",
+      "alternative": "Phase5另核IUCN正式评估/日期与API授权；直接API缓存需许可。",
+      "concept_id": "avibase-F2858F9F",
+      "source_date": "2026-06-11"
+    },
+    {
+      "id": "little_egret_china_conservation",
+      "species": "Egretta garzetta",
+      "scenario": [
+        "common_guangdong",
+        "common_jiangsu",
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "china_conservation",
+      "source_url": "https://www.forestry.gov.cn/c/www/gkgfxwj/546059.jhtml",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "2023-06-26官方三有名录公告存在；本次未逐附件行核对本概念。",
+      "license_url": "https://www.forestry.gov.cn/c/www/gkgfxwj/546059.jhtml",
+      "terms": "法定中国名录与全球IUCN分存；官页陈述不能替代最新附件概念核对。",
+      "cache_permission": "permission_required",
+      "gap": "最新国家/地区附件行与学名、概念及资料日期未逐条确认。",
+      "alternative": "Phase5下载正式名录附件、逐行核对和记录版本/地区/体系；未知保持未知。",
+      "concept_id": "avibase-F2858F9F",
+      "source_date": "2025-05-09"
+    },
+    {
+      "id": "great_egret_name",
+      "species": "Ardea alba",
+      "scenario": [
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "name",
+      "source_url": "https://swj.beijing.gov.cn/swdt/ztzl/hhjlzl/index_2.html",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "资料入口使用名称“大白鹭”；全量真实名录当前没有中文名称。",
+      "license_url": "https://swj.beijing.gov.cn/swdt/ztzl/hhjlzl/index_2.html",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "此页面名称/学名不足以证明同一概念；未取得可导入中文名称许可。",
+      "alternative": "按chinese_wikidata或chinese_ebird流程核验许可、概念与版本后逐条导入。",
+      "concept_id": "avibase-49D9148A",
+      "source_date": "未标明"
+    },
+    {
+      "id": "great_egret_appearance",
+      "species": "Ardea alba",
+      "scenario": [
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "appearance",
+      "source_url": "https://swj.beijing.gov.cn/swdt/ztzl/hhjlzl/index_2.html",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "官页对白鹭组比较大/中/小白鹭体形和羽饰，并给组级习性/分布；旧分类及组级文字不能自动映射成此概念的完整介绍。",
+      "license_url": "https://swj.beijing.gov.cn/swdt/ztzl/hhjlzl/index_2.html",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-49D9148A",
+      "source_date": "未标明"
+    },
+    {
+      "id": "great_egret_habits",
+      "species": "Ardea alba",
+      "scenario": [
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "habits",
+      "source_url": "https://swj.beijing.gov.cn/swdt/ztzl/hhjlzl/index_2.html",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "官页对白鹭组比较大/中/小白鹭体形和羽饰，并给组级习性/分布；旧分类及组级文字不能自动映射成此概念的完整介绍。",
+      "license_url": "https://swj.beijing.gov.cn/swdt/ztzl/hhjlzl/index_2.html",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-49D9148A",
+      "source_date": "未标明"
+    },
+    {
+      "id": "great_egret_distribution",
+      "species": "Ardea alba",
+      "scenario": [
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "distribution",
+      "source_url": "https://swj.beijing.gov.cn/swdt/ztzl/hhjlzl/index_2.html",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "官页对白鹭组比较大/中/小白鹭体形和羽饰，并给组级习性/分布；旧分类及组级文字不能自动映射成此概念的完整介绍。",
+      "license_url": "https://swj.beijing.gov.cn/swdt/ztzl/hhjlzl/index_2.html",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-49D9148A",
+      "source_date": "未标明"
+    },
+    {
+      "id": "great_egret_similar_species",
+      "species": "Ardea alba",
+      "scenario": [
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "similar_species",
+      "source_url": "https://swj.beijing.gov.cn/swdt/ztzl/hhjlzl/index_2.html",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "已抽查三白鹭体形/脚趾/羽饰比较；不能把组级分布或旧保护描述自动套到AviList概念。",
+      "license_url": "https://swj.beijing.gov.cn/swdt/ztzl/hhjlzl/index_2.html",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-49D9148A",
+      "source_date": "未标明"
+    },
+    {
+      "id": "great_egret_global_conservation",
+      "species": "Ardea alba",
+      "scenario": [
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "global_conservation",
+      "source_url": "https://www.avilist.org/checklist/v2025b/",
+      "checked_at": "2026-10-14",
+      "status": "verified",
+      "evidence_summary": "实际固定v2025b行 avibase-49D9148A 的 IUCN_Red_List_Category=LC；此版本辅助等级，非实时状态。 资料日期2026-06-11。",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "terms": "AviList CC BY4.0固定快照；来源IUCN体系与国家/地区法律分别展示。",
+      "cache_permission": "allowed_with_attribution",
+      "gap": "实时IUCN评估尚未获取；不把名录日期当该物种评估日期。",
+      "alternative": "Phase5另核IUCN正式评估/日期与API授权；直接API缓存需许可。",
+      "concept_id": "avibase-49D9148A",
+      "source_date": "2026-06-11"
+    },
+    {
+      "id": "great_egret_china_conservation",
+      "species": "Ardea alba",
+      "scenario": [
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "china_conservation",
+      "source_url": "https://www.forestry.gov.cn/c/www/gkgfxwj/546059.jhtml",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "2023-06-26官方三有名录公告存在；本次未逐附件行核对本概念。",
+      "license_url": "https://www.forestry.gov.cn/c/www/gkgfxwj/546059.jhtml",
+      "terms": "法定中国名录与全球IUCN分存；官页陈述不能替代最新附件概念核对。",
+      "cache_permission": "permission_required",
+      "gap": "最新国家/地区附件行与学名、概念及资料日期未逐条确认。",
+      "alternative": "Phase5下载正式名录附件、逐行核对和记录版本/地区/体系；未知保持未知。",
+      "concept_id": "avibase-49D9148A",
+      "source_date": "未标明"
+    },
+    {
+      "id": "intermediate_egret_name",
+      "species": "Ardea intermedia",
+      "scenario": [
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "name",
+      "source_url": "https://www.jcgov.gov.cn/dtxx/ztzl/2019nzt/jcsysnltpz/zpj_21316/201904/t20190411_363828.shtml",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "资料入口使用名称“中白鹭”；全量真实名录当前没有中文名称。",
+      "license_url": "https://www.jcgov.gov.cn/dtxx/ztzl/2019nzt/jcsysnltpz/zpj_21316/201904/t20190411_363828.shtml",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "此页面名称/学名不足以证明同一概念；未取得可导入中文名称许可。",
+      "alternative": "按chinese_wikidata或chinese_ebird流程核验许可、概念与版本后逐条导入。",
+      "concept_id": "avibase-30785911",
+      "source_date": "2019-04-11"
+    },
+    {
+      "id": "intermediate_egret_appearance",
+      "species": "Ardea intermedia",
+      "scenario": [
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "appearance",
+      "source_url": "https://www.jcgov.gov.cn/dtxx/ztzl/2019nzt/jcsysnltpz/zpj_21316/201904/t20190411_363828.shtml",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "地方官页含中白鹭体形62–70cm、湖泊/池塘/沼泽及本地描述；不支持完整全球范围，也未提供AviList概念标识。",
+      "license_url": "https://www.jcgov.gov.cn/dtxx/ztzl/2019nzt/jcsysnltpz/zpj_21316/201904/t20190411_363828.shtml",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-30785911",
+      "source_date": "2019-04-11"
+    },
+    {
+      "id": "intermediate_egret_habits",
+      "species": "Ardea intermedia",
+      "scenario": [
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "habits",
+      "source_url": "https://www.jcgov.gov.cn/dtxx/ztzl/2019nzt/jcsysnltpz/zpj_21316/201904/t20190411_363828.shtml",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "地方官页含中白鹭体形62–70cm、湖泊/池塘/沼泽及本地描述；不支持完整全球范围，也未提供AviList概念标识。",
+      "license_url": "https://www.jcgov.gov.cn/dtxx/ztzl/2019nzt/jcsysnltpz/zpj_21316/201904/t20190411_363828.shtml",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-30785911",
+      "source_date": "2019-04-11"
+    },
+    {
+      "id": "intermediate_egret_distribution",
+      "species": "Ardea intermedia",
+      "scenario": [
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "distribution",
+      "source_url": "https://www.jcgov.gov.cn/dtxx/ztzl/2019nzt/jcsysnltpz/zpj_21316/201904/t20190411_363828.shtml",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "地方官页含中白鹭体形62–70cm、湖泊/池塘/沼泽及本地描述；不支持完整全球范围，也未提供AviList概念标识。",
+      "license_url": "https://www.jcgov.gov.cn/dtxx/ztzl/2019nzt/jcsysnltpz/zpj_21316/201904/t20190411_363828.shtml",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-30785911",
+      "source_date": "2019-04-11"
+    },
+    {
+      "id": "intermediate_egret_similar_species",
+      "species": "Ardea intermedia",
+      "scenario": [
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "similar_species",
+      "source_url": "https://swj.beijing.gov.cn/swdt/ztzl/hhjlzl/index_2.html",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "北京水务局三白鹭比较和东莞白鹭页有可见区别，但概念/季节一致性须逐条审阅。",
+      "license_url": "https://www.jcgov.gov.cn/dtxx/ztzl/2019nzt/jcsysnltpz/zpj_21316/201904/t20190411_363828.shtml",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-30785911",
+      "source_date": "2019-04-11"
+    },
+    {
+      "id": "intermediate_egret_global_conservation",
+      "species": "Ardea intermedia",
+      "scenario": [
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "global_conservation",
+      "source_url": "https://www.avilist.org/checklist/v2025b/",
+      "checked_at": "2026-10-14",
+      "status": "verified",
+      "evidence_summary": "实际固定v2025b行 avibase-30785911 的 IUCN_Red_List_Category=LC；此版本辅助等级，非实时状态。 资料日期2026-06-11。",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "terms": "AviList CC BY4.0固定快照；来源IUCN体系与国家/地区法律分别展示。",
+      "cache_permission": "allowed_with_attribution",
+      "gap": "实时IUCN评估尚未获取；不把名录日期当该物种评估日期。",
+      "alternative": "Phase5另核IUCN正式评估/日期与API授权；直接API缓存需许可。",
+      "concept_id": "avibase-30785911",
+      "source_date": "2026-06-11"
+    },
+    {
+      "id": "intermediate_egret_china_conservation",
+      "species": "Ardea intermedia",
+      "scenario": [
+        "similar_species",
+        "multi_bird"
+      ],
+      "field": "china_conservation",
+      "source_url": "https://www.forestry.gov.cn/c/www/gkgfxwj/546059.jhtml",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "2023-06-26官方三有名录公告存在；本次未逐附件行核对本概念。",
+      "license_url": "https://www.forestry.gov.cn/c/www/gkgfxwj/546059.jhtml",
+      "terms": "法定中国名录与全球IUCN分存；官页陈述不能替代最新附件概念核对。",
+      "cache_permission": "permission_required",
+      "gap": "最新国家/地区附件行与学名、概念及资料日期未逐条确认。",
+      "alternative": "Phase5下载正式名录附件、逐行核对和记录版本/地区/体系；未知保持未知。",
+      "concept_id": "avibase-30785911",
+      "source_date": "2019-04-11"
+    },
+    {
+      "id": "light_vented_bulbul_name",
+      "species": "Pycnonotus sinensis",
+      "scenario": [
+        "common_guangdong",
+        "common_jiangsu",
+        "similar_species"
+      ],
+      "field": "name",
+      "source_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/534",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "资料入口使用名称“白头鹎”；全量真实名录当前没有中文名称。",
+      "license_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/534",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "此页面名称/学名不足以证明同一概念；未取得可导入中文名称许可。",
+      "alternative": "按chinese_wikidata或chinese_ebird流程核验许可、概念与版本后逐条导入。",
+      "concept_id": "avibase-BB5650EB",
+      "source_date": "页面未标；版权2020–2021"
+    },
+    {
+      "id": "light_vented_bulbul_appearance",
+      "species": "Pycnonotus sinensis",
+      "scenario": [
+        "common_guangdong",
+        "common_jiangsu",
+        "similar_species"
+      ],
+      "field": "appearance",
+      "source_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/534",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "中科院昆明动物所页实际描述头部白色区域、群栖/食物以及江苏/广东；条目为指名亚种Pycnonotus sinensis sinensis，不能泛化全部亚种。",
+      "license_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/534",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-BB5650EB",
+      "source_date": "页面未标；版权2020–2021"
+    },
+    {
+      "id": "light_vented_bulbul_habits",
+      "species": "Pycnonotus sinensis",
+      "scenario": [
+        "common_guangdong",
+        "common_jiangsu",
+        "similar_species"
+      ],
+      "field": "habits",
+      "source_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/534",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "中科院昆明动物所页实际描述头部白色区域、群栖/食物以及江苏/广东；条目为指名亚种Pycnonotus sinensis sinensis，不能泛化全部亚种。",
+      "license_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/534",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-BB5650EB",
+      "source_date": "页面未标；版权2020–2021"
+    },
+    {
+      "id": "light_vented_bulbul_distribution",
+      "species": "Pycnonotus sinensis",
+      "scenario": [
+        "common_guangdong",
+        "common_jiangsu",
+        "similar_species"
+      ],
+      "field": "distribution",
+      "source_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/534",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "中科院昆明动物所页实际描述头部白色区域、群栖/食物以及江苏/广东；条目为指名亚种Pycnonotus sinensis sinensis，不能泛化全部亚种。",
+      "license_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/534",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-BB5650EB",
+      "source_date": "页面未标；版权2020–2021"
+    },
+    {
+      "id": "light_vented_bulbul_similar_species",
+      "species": "Pycnonotus sinensis",
+      "scenario": [
+        "common_guangdong",
+        "common_jiangsu",
+        "similar_species"
+      ],
+      "field": "similar_species",
+      "source_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/534",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "未取得已核实且概念一致的中文白头鹎/红耳鹎直接比较资料。",
+      "license_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/534",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-BB5650EB",
+      "source_date": "页面未标；版权2020–2021"
+    },
+    {
+      "id": "light_vented_bulbul_global_conservation",
+      "species": "Pycnonotus sinensis",
+      "scenario": [
+        "common_guangdong",
+        "common_jiangsu",
+        "similar_species"
+      ],
+      "field": "global_conservation",
+      "source_url": "https://www.avilist.org/checklist/v2025b/",
+      "checked_at": "2026-10-14",
+      "status": "verified",
+      "evidence_summary": "实际固定v2025b行 avibase-BB5650EB 的 IUCN_Red_List_Category=LC；此版本辅助等级，非实时状态。 资料日期2026-06-11。",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "terms": "AviList CC BY4.0固定快照；来源IUCN体系与国家/地区法律分别展示。",
+      "cache_permission": "allowed_with_attribution",
+      "gap": "实时IUCN评估尚未获取；不把名录日期当该物种评估日期。",
+      "alternative": "Phase5另核IUCN正式评估/日期与API授权；直接API缓存需许可。",
+      "concept_id": "avibase-BB5650EB",
+      "source_date": "2026-06-11"
+    },
+    {
+      "id": "light_vented_bulbul_china_conservation",
+      "species": "Pycnonotus sinensis",
+      "scenario": [
+        "common_guangdong",
+        "common_jiangsu",
+        "similar_species"
+      ],
+      "field": "china_conservation",
+      "source_url": "https://www.forestry.gov.cn/c/www/gkgfxwj/546059.jhtml",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "2023-06-26官方三有名录公告存在；本次未逐附件行核对本概念。",
+      "license_url": "https://www.forestry.gov.cn/c/www/gkgfxwj/546059.jhtml",
+      "terms": "法定中国名录与全球IUCN分存；官页陈述不能替代最新附件概念核对。",
+      "cache_permission": "permission_required",
+      "gap": "最新国家/地区附件行与学名、概念及资料日期未逐条确认。",
+      "alternative": "Phase5下载正式名录附件、逐行核对和记录版本/地区/体系；未知保持未知。",
+      "concept_id": "avibase-BB5650EB",
+      "source_date": "页面未标；版权2020–2021"
+    },
+    {
+      "id": "red_whiskered_bulbul_name",
+      "species": "Pycnonotus jocosus",
+      "scenario": [
+        "common_guangdong",
+        "similar_species"
+      ],
+      "field": "name",
+      "source_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/529",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "资料入口使用名称“红耳鹎”；全量真实名录当前没有中文名称。",
+      "license_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/529",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "此页面名称/学名不足以证明同一概念；未取得可导入中文名称许可。",
+      "alternative": "按chinese_wikidata或chinese_ebird流程核验许可、概念与版本后逐条导入。",
+      "concept_id": "avibase-F9E37510",
+      "source_date": "页面未标；版权2020–2021"
+    },
+    {
+      "id": "red_whiskered_bulbul_appearance",
+      "species": "Pycnonotus jocosus",
+      "scenario": [
+        "common_guangdong",
+        "similar_species"
+      ],
+      "field": "appearance",
+      "source_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/529",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "中科院页有形态与群体/混群习性；条目为指名亚种Pycnonotus jocosus jocosus。不从本页推出江苏常见。",
+      "license_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/529",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-F9E37510",
+      "source_date": "页面未标；版权2020–2021"
+    },
+    {
+      "id": "red_whiskered_bulbul_habits",
+      "species": "Pycnonotus jocosus",
+      "scenario": [
+        "common_guangdong",
+        "similar_species"
+      ],
+      "field": "habits",
+      "source_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/529",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "中科院页有形态与群体/混群习性；条目为指名亚种Pycnonotus jocosus jocosus。不从本页推出江苏常见。",
+      "license_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/529",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-F9E37510",
+      "source_date": "页面未标；版权2020–2021"
+    },
+    {
+      "id": "red_whiskered_bulbul_distribution",
+      "species": "Pycnonotus jocosus",
+      "scenario": [
+        "common_guangdong",
+        "similar_species"
+      ],
+      "field": "distribution",
+      "source_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/529",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "中科院页有形态与群体/混群习性；条目为指名亚种Pycnonotus jocosus jocosus。不从本页推出江苏常见。",
+      "license_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/529",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-F9E37510",
+      "source_date": "页面未标；版权2020–2021"
+    },
+    {
+      "id": "red_whiskered_bulbul_similar_species",
+      "species": "Pycnonotus jocosus",
+      "scenario": [
+        "common_guangdong",
+        "similar_species"
+      ],
+      "field": "similar_species",
+      "source_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/529",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "未取得已核实的中文两鹎直接辨别资料；不能由两段外形自动生成比较事实。",
+      "license_url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/529",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-F9E37510",
+      "source_date": "页面未标；版权2020–2021"
+    },
+    {
+      "id": "red_whiskered_bulbul_global_conservation",
+      "species": "Pycnonotus jocosus",
+      "scenario": [
+        "common_guangdong",
+        "similar_species"
+      ],
+      "field": "global_conservation",
+      "source_url": "https://www.avilist.org/checklist/v2025b/",
+      "checked_at": "2026-10-14",
+      "status": "verified",
+      "evidence_summary": "实际固定v2025b行 avibase-F9E37510 的 IUCN_Red_List_Category=LC；此版本辅助等级，非实时状态。 资料日期2026-06-11。",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "terms": "AviList CC BY4.0固定快照；来源IUCN体系与国家/地区法律分别展示。",
+      "cache_permission": "allowed_with_attribution",
+      "gap": "实时IUCN评估尚未获取；不把名录日期当该物种评估日期。",
+      "alternative": "Phase5另核IUCN正式评估/日期与API授权；直接API缓存需许可。",
+      "concept_id": "avibase-F9E37510",
+      "source_date": "2026-06-11"
+    },
+    {
+      "id": "red_whiskered_bulbul_china_conservation",
+      "species": "Pycnonotus jocosus",
+      "scenario": [
+        "common_guangdong",
+        "similar_species"
+      ],
+      "field": "china_conservation",
+      "source_url": "https://www.forestry.gov.cn/c/www/gkgfxwj/546059.jhtml",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "2023-06-26官方三有名录公告存在；本次未逐附件行核对本概念。",
+      "license_url": "https://www.forestry.gov.cn/c/www/gkgfxwj/546059.jhtml",
+      "terms": "法定中国名录与全球IUCN分存；官页陈述不能替代最新附件概念核对。",
+      "cache_permission": "permission_required",
+      "gap": "最新国家/地区附件行与学名、概念及资料日期未逐条确认。",
+      "alternative": "Phase5下载正式名录附件、逐行核对和记录版本/地区/体系；未知保持未知。",
+      "concept_id": "avibase-F9E37510",
+      "source_date": "页面未标；版权2020–2021"
+    },
+    {
+      "id": "northern_cardinal_name",
+      "species": "Cardinalis cardinalis",
+      "scenario": [
+        "overseas"
+      ],
+      "field": "name",
+      "source_url": "https://dongniao.net/nd/10450/%E4%B8%BB%E7%BA%A2%E9%9B%80/Northern%2BCardinal/Northern%2BCardinal",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "资料入口使用名称“主红雀（资料用名，未导入）”；全量真实名录当前没有中文名称。",
+      "license_url": "https://dongniao.net/nd/10450/%E4%B8%BB%E7%BA%A2%E9%9B%80/Northern%2BCardinal/Northern%2BCardinal",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "此页面名称/学名不足以证明同一概念；未取得可导入中文名称许可。",
+      "alternative": "按chinese_wikidata或chinese_ebird流程核验许可、概念与版本后逐条导入。",
+      "concept_id": "avibase-4E74AE22",
+      "source_date": "未核实"
+    },
+    {
+      "id": "northern_cardinal_appearance",
+      "species": "Cardinalis cardinalis",
+      "scenario": [
+        "overseas"
+      ],
+      "field": "appearance",
+      "source_url": "https://dongniao.net/nd/10450/%E4%B8%BB%E7%BA%A2%E9%9B%80/Northern%2BCardinal/Northern%2BCardinal",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "辅助非官方中文页面提供名称/外形/栖息/分布入口；权威中文来源与正文许可未建立，不能当作已获可缓存语料。",
+      "license_url": "https://dongniao.net/nd/10450/%E4%B8%BB%E7%BA%A2%E9%9B%80/Northern%2BCardinal/Northern%2BCardinal",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-4E74AE22",
+      "source_date": "未核实"
+    },
+    {
+      "id": "northern_cardinal_habits",
+      "species": "Cardinalis cardinalis",
+      "scenario": [
+        "overseas"
+      ],
+      "field": "habits",
+      "source_url": "https://dongniao.net/nd/10450/%E4%B8%BB%E7%BA%A2%E9%9B%80/Northern%2BCardinal/Northern%2BCardinal",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "辅助非官方中文页面提供名称/外形/栖息/分布入口；权威中文来源与正文许可未建立，不能当作已获可缓存语料。",
+      "license_url": "https://dongniao.net/nd/10450/%E4%B8%BB%E7%BA%A2%E9%9B%80/Northern%2BCardinal/Northern%2BCardinal",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-4E74AE22",
+      "source_date": "未核实"
+    },
+    {
+      "id": "northern_cardinal_distribution",
+      "species": "Cardinalis cardinalis",
+      "scenario": [
+        "overseas"
+      ],
+      "field": "distribution",
+      "source_url": "https://dongniao.net/nd/10450/%E4%B8%BB%E7%BA%A2%E9%9B%80/Northern%2BCardinal/Northern%2BCardinal",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "辅助非官方中文页面提供名称/外形/栖息/分布入口；权威中文来源与正文许可未建立，不能当作已获可缓存语料。",
+      "license_url": "https://dongniao.net/nd/10450/%E4%B8%BB%E7%BA%A2%E9%9B%80/Northern%2BCardinal/Northern%2BCardinal",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-4E74AE22",
+      "source_date": "未核实"
+    },
+    {
+      "id": "northern_cardinal_similar_species",
+      "species": "Cardinalis cardinalis",
+      "scenario": [
+        "overseas"
+      ],
+      "field": "similar_species",
+      "source_url": "https://dongniao.net/nd/10450/%E4%B8%BB%E7%BA%A2%E9%9B%80/Northern%2BCardinal/Northern%2BCardinal",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "未核实权威中文相似种比较；待取得许可资料或由专家写原创、逐事实留证。",
+      "license_url": "https://dongniao.net/nd/10450/%E4%B8%BB%E7%BA%A2%E9%9B%80/Northern%2BCardinal/Northern%2BCardinal",
+      "terms": "页面可访问/有中文内容不等于获正文、名称或图片复制/缓存许可。",
+      "cache_permission": "permission_required",
+      "gap": "正文/名称缓存授权与AviList概念映射尚未核实。",
+      "alternative": "Phase5保留外链；取得授权且逐概念核验后写可追溯中文摘要，未取得显示暂缺。",
+      "concept_id": "avibase-4E74AE22",
+      "source_date": "未核实"
+    },
+    {
+      "id": "northern_cardinal_global_conservation",
+      "species": "Cardinalis cardinalis",
+      "scenario": [
+        "overseas"
+      ],
+      "field": "global_conservation",
+      "source_url": "https://www.avilist.org/checklist/v2025b/",
+      "checked_at": "2026-10-14",
+      "status": "verified",
+      "evidence_summary": "实际固定v2025b行 avibase-4E74AE22 的 IUCN_Red_List_Category=LC；此版本辅助等级，非实时状态。 资料日期2026-06-11。",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "terms": "AviList CC BY4.0固定快照；来源IUCN体系与国家/地区法律分别展示。",
+      "cache_permission": "allowed_with_attribution",
+      "gap": "实时IUCN评估尚未获取；不把名录日期当该物种评估日期。",
+      "alternative": "Phase5另核IUCN正式评估/日期与API授权；直接API缓存需许可。",
+      "concept_id": "avibase-4E74AE22",
+      "source_date": "2026-06-11"
+    },
+    {
+      "id": "northern_cardinal_china_conservation",
+      "species": "Cardinalis cardinalis",
+      "scenario": [
+        "overseas"
+      ],
+      "field": "china_conservation",
+      "source_url": "https://www.forestry.gov.cn/c/www/gkgfxwj/546059.jhtml",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "海外代表的中国法定状态未建立，不由未找到推断无保护。",
+      "license_url": "https://www.forestry.gov.cn/c/www/gkgfxwj/546059.jhtml",
+      "terms": "法定中国名录与全球IUCN分存；官页陈述不能替代最新附件概念核对。",
+      "cache_permission": "permission_required",
+      "gap": "最新国家/地区附件行与学名、概念及资料日期未逐条确认。",
+      "alternative": "Phase5下载正式名录附件、逐行核对和记录版本/地区/体系；未知保持未知。",
+      "concept_id": "avibase-4E74AE22",
+      "source_date": "未核实"
+    },
+    {
+      "id": "mixed_egret_pair",
+      "species": [
+        "Egretta garzetta",
+        "Ardea intermedia"
+      ],
+      "scenario": "multi_bird",
+      "field": "scenario",
+      "source_url": "https://lyj.dg.gov.cn/mhlh/content/post_4380004.html",
+      "checked_at": "2026-10-14",
+      "status": "pending",
+      "evidence_summary": "有中文脚趾辨别内容可用于准备人工标注双种场景；没有真实同图、多目标模型检测证据。",
+      "license_url": "https://lyj.dg.gov.cn/mhlh/content/post_4380004.html",
+      "terms": "页面图片版权属于摄影者，科普分享/不商用/须注明；未取得产品图片使用或私照上传许可。",
+      "cache_permission": "permission_required",
+      "gap": "同一张授权照片中两种鸟的标注、样片权利与云传输同意未建立。",
+      "alternative": "Phase3用户选定并标注双种JPEG，分别测完整/部分命中与人工纠正负担。"
+    },
+    {
+      "id": "images_rights",
+      "species": null,
+      "scenario": "representative",
+      "field": "image_license",
+      "source_url": "https://lyj.dg.gov.cn/mhlh/content/post_4380004.html",
+      "checked_at": "2026-10-14",
+      "status": "verified",
+      "evidence_summary": "实际图片条款称版权归拍摄者、仅科普传播分享、不商用、引用转载请署名；KIZ页All Rights Reserved；未下载图片。",
+      "license_url": "https://lyj.dg.gov.cn/mhlh/content/post_4380004.html",
+      "terms": "名称/正文/图片/权重分别核查；图片授权不能由正文或名录CC BY推导。",
+      "cache_permission": "permission_required",
+      "gap": "无产品图片使用授权。",
+      "alternative": "Phase5使用用户自产且授权的照片，或逐张取得明确允许产品使用/缓存的图片许可。"
+    },
+    {
+      "id": "iucn_cache",
+      "species": null,
+      "scenario": "global",
+      "field": "cache_terms",
+      "source_url": "https://api.iucnredlist.org/",
+      "checked_at": "2026-10-14",
+      "status": "verified",
+      "evidence_summary": "官方API要求非商用token并请求缓存前联系；版本引用2026-1不能替代逐物种评估日期。",
+      "license_url": "https://api.iucnredlist.org/",
+      "terms": "直接IUCN资料缓存须其授权；AviList已有许可快照字段与直接API分开。",
+      "cache_permission": "permission_required",
+      "gap": "未配置token/缓存授权；未调用API。",
+      "alternative": "Phase5先获缓存许可或保留外链；阶段1用有署名的固定AviList等级并标明日期。"
+    }
+  ]
+}

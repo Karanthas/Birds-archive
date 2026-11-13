@@ -1,0 +1,131 @@
+name: ${BIRDS_PROJECT:?required}
+x-application: &application
+  image: ${BIRDS_APP_IMAGE:?required}
+  pull_policy: never
+  init: true
+  user: "${BIRDS_UID:?required}:${BIRDS_GID:?required}"
+  working_dir: /app
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  pids_limit: 64
+  stop_grace_period: 30s
+  tmpfs: ["/tmp:size=64m,mode=1777"]
+  networks: [lan_backend, remote_backend]
+  environment: &environment
+    BIRDS_SECRET_KEY: ${BIRDS_SECRET_KEY:?required}
+    BIRDS_DEPLOYMENT_ID: ${BIRDS_DEPLOYMENT_ID:?required}
+    BIRDS_DEPLOYMENT_MODE: "1"
+    BIRDS_UID: ${BIRDS_UID:?required}
+    BIRDS_GID: ${BIRDS_GID:?required}
+    BIRDS_DEPLOYMENT_MEMORY_MB: ${BIRDS_DEPLOYMENT_MEMORY_MB:-2048}
+    BIRDS_DEPLOYMENT_RESERVE_MB: ${BIRDS_DEPLOYMENT_RESERVE_MB:-512}
+    BIRDS_LOCAL_HTTP: ${BIRDS_LOCAL_HTTP:-0}
+    BIRDS_ALLOWED_HOSTS: ${BIRDS_ALLOWED_HOSTS:?required}
+    BIRDS_PROXY_ONLY: "1"
+    BIRDS_LAN_HOST: ${BIRDS_LAN_HOST:?required}
+    BIRDS_REMOTE_HOST: ${BIRDS_REMOTE_HOST:?required}
+    MAX_FILE_BYTES: ${BIRDS_MAX_FILE_BYTES:-104857600}
+    MAX_IMAGE_PIXELS: ${BIRDS_MAX_IMAGE_PIXELS:-40000000}
+    BIRDS_INBOX_ROOT: /roots/inbox
+    BIRDS_DATA_ROOT: /roots/data
+    BIRDS_ARCHIVE_ROOT: /roots/archive
+    BIRDS_CLAIM_ROOT: /roots/claim
+    BIRDS_HANDOFF_MODE: published
+    BIRDS_PUBLISHED_CONTRACT: "1"
+    BIRDS_RECOGNITION_ENABLED: "0"
+    WORKER_CONCURRENCY: "1"
+    WORKER_MEMORY_MB: ${BIRDS_WORKER_MEMORY_MB:-1024}
+    WORKER_NICE: "10"
+    SCAN_INTERVAL_MS: "1000"
+    STABLE_WINDOW_MS: "30000"
+  volumes:
+    # inbox→claim必须在同一VFS mount内rename；相同st_dev不能排除EXDEV。
+    - {type: bind, source: "${BIRDS_ROOTS_HOST:?required}", target: /roots, bind: {create_host_path: false}}
+services:
+  init:
+    <<: *application
+    profiles: [initialize]
+    command: [init]
+    restart: "no"
+    mem_limit: 512m
+    cpus: "1.0"
+  maintenance:
+    <<: *application
+    profiles: [maintenance]
+    command: [backuparchive, status]
+    restart: "no"
+    mem_limit: 512m
+    cpus: "1.0"
+  web:
+    <<: *application
+    command: [web]
+    restart: unless-stopped
+    mem_limit: ${BIRDS_WEB_MEMORY:-512m}
+    cpus: ${BIRDS_WEB_CPUS:-0.5}
+    expose: ["8000"]
+  worker:
+    <<: *application
+    command: [worker]
+    restart: unless-stopped
+    mem_limit: ${BIRDS_WORKER_MEMORY:-1280m}
+    cpus: ${BIRDS_WORKER_CPUS:-1.2}
+  lan:
+    image: docker.io/library/nginx@sha256:b565a9579cdabe43de09a5a278dc95ceee721dae1cacf85247effc4f6630d511
+    platform: linux/amd64
+    pull_policy: never
+    user: "${BIRDS_UID:?required}:${BIRDS_GID:?required}"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 32
+    mem_limit: ${BIRDS_PROXY_MEMORY:-128m}
+    cpus: ${BIRDS_PROXY_CPUS:-0.15}
+    restart: unless-stopped
+    stop_grace_period: 10s
+    tmpfs: ["/tmp:size=16m,mode=1777"]
+    command: [nginx, -c, /tmp/nginx.conf, -g, "daemon off;"]
+    environment:
+      NGINX_ENVSUBST_OUTPUT_DIR: /tmp
+      NGINX_ENVSUBST_FILTER: ^BIRDS_
+      BIRDS_LAN_HOST: ${BIRDS_LAN_HOST:?required}
+      BIRDS_MAX_FILE_BYTES: ${BIRDS_MAX_FILE_BYTES:-104857600}
+    volumes:
+      - {type: bind, source: ./deploy/nginx-lan.conf, target: /etc/nginx/templates/nginx.conf.template, read_only: true, bind: {create_host_path: false}}
+      - {type: bind, source: "${BIRDS_LAN_TLS_DIR:?required}", target: /run/birds-tls, read_only: true, bind: {create_host_path: false}}
+    ports:
+      - "${BIRDS_LAN_IP:?exact LAN IP required}:443:8443"
+    networks: [lan_backend]
+    depends_on: [web]
+  remote:
+    image: docker.io/library/nginx@sha256:b565a9579cdabe43de09a5a278dc95ceee721dae1cacf85247effc4f6630d511
+    platform: linux/amd64
+    pull_policy: never
+    user: "${BIRDS_UID:?required}:${BIRDS_GID:?required}"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 32
+    mem_limit: ${BIRDS_PROXY_MEMORY:-128m}
+    cpus: ${BIRDS_PROXY_CPUS:-0.15}
+    restart: unless-stopped
+    stop_grace_period: 10s
+    tmpfs: ["/tmp:size=16m,mode=1777"]
+    command: [nginx, -c, /tmp/nginx.conf, -g, "daemon off;"]
+    environment:
+      NGINX_ENVSUBST_OUTPUT_DIR: /tmp
+      NGINX_ENVSUBST_FILTER: ^BIRDS_
+      BIRDS_REMOTE_HOST: ${BIRDS_REMOTE_HOST:?required}
+      BIRDS_MAX_FILE_BYTES: ${BIRDS_MAX_FILE_BYTES:-104857600}
+    volumes:
+      - {type: bind, source: ./deploy/nginx-remote.conf, target: /etc/nginx/templates/nginx.conf.template, read_only: true, bind: {create_host_path: false}}
+      - {type: bind, source: "${BIRDS_REMOTE_TLS_DIR:?required}", target: /run/birds-tls, read_only: true, bind: {create_host_path: false}}
+    ports:
+      - "${BIRDS_REMOTE_IP:?exact remote IP required}:443:8443"
+    networks: [remote_backend]
+    depends_on: [web]
+networks:
+  lan_backend:
+    internal: true
+  remote_backend:
+    internal: true

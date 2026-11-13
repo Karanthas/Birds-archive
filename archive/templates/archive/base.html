@@ -1,0 +1,10 @@
+{% load static %}<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}栖羽{% endblock %}</title><link rel="stylesheet" href="{% static 'archive/app.css' %}">
+<meta name="htmx-config" content='{"historyCacheSize":0,"allowEval":false,"allowScriptTags":false,"includeIndicatorStyles":false}'>
+<script defer src="{% static 'archive/vendor/htmx-2.0.11.min.js' %}" integrity="sha384-2OatzQy1H+Zd/IIrjr1TcuDGqLXeHhbooAyJY1KdQMKnr4LZ22k31GBLdYKHmVjg"></script>
+<script defer src="{% static 'archive/app.js' %}"></script></head>
+<body>
+<a class="skip" href="#main">跳到主要内容</a>
+<header><a class="brand" href="{% url 'gallery' %}">栖羽</a><nav aria-label="主导航"><a href="{% url 'gallery' %}" {% if request.resolver_match.url_name == 'gallery' or request.resolver_match.url_name == 'gallery-page' %}aria-current="page"{% endif %}>相册</a><a data-guide-entry href="{% if guide_index_url %}{{ guide_index_url }}{% else %}{% url 'guide_index' %}{% endif %}" {% if request.resolver_match.url_name == 'guide_index' or request.resolver_match.url_name == 'guide_detail' %}aria-current="page"{% endif %}>图鉴</a><a href="{% url 'workbench' %}" {% if request.resolver_match.url_name == 'workbench' or request.resolver_match.url_name == 'location' or request.resolver_match.url_name == 'capture-time' %}aria-current="page"{% endif %}>导入</a><a href="{% url 'tasks' %}" {% if request.resolver_match.url_name == 'tasks' %}aria-current="page"{% endif %}>任务</a>{% url 'catalog' as catalog_url %}{% if catalog_url %}<a href="{{ catalog_url }}" {% if request.resolver_match.url_name == 'catalog' %}aria-current="page"{% endif %}>鸟种查询</a>{% endif %}</nav></header>
+<main id="main" tabindex="-1">{% block content %}{% if error_message %}<div class="error-summary" data-error-summary id="request-errors" tabindex="-1" role="alert">{{ error_message }}</div><a class="button quiet" href="{% url 'workbench' %}">返回导入</a>{% endif %}{% endblock %}</main></body></html>

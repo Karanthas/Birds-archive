@@ -1,0 +1,4 @@
+# 03-09授权后仅目标NAS隔离环境；本轮不安装。
+open_clip_torch==3.3.0
+torch==2.13.0+cpu
+torchvision==0.28.0+cpu

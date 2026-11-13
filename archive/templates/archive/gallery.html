@@ -1,0 +1,26 @@
+{% extends fragment|yesno:'archive/task_fragment_base.html,archive/base.html' %}
+{% block content %}{% if not fragment %}<h1>{% if gallery_page.species %}{{ gallery_page.species.display_name }}{% else %}摄影相册{% endif %}</h1>
+{% if gallery_page.species %}<a href="{% url 'gallery' %}">全部照片</a>{% endif %} <a href="{% url 'gallery' %}?view=trash">回收站</a>
+<p data-filter-summary>{{ filter_summary }} · 匹配 {{ gallery_page.created_count }} 张{% if gallery_page.dirty %} · 本集合剩余 {{ gallery_page.remaining_count }} 张{% endif %} <a href="{% url 'gallery' %}">清除条件</a></p>
+<p role="status" data-gallery-changes {% if not gallery_page.dirty %}hidden{% endif %}>照片信息已变化，本集合保持原顺序与分组。<span data-gallery-remaining>本集合剩余 {{ gallery_page.remaining_count }} 张。</span><a href="{{ gallery_refresh_url }}">重新筛选并刷新集合</a></p>
+<details class="gallery-filters"><summary>筛选</summary><form method="get" action="{% url 'gallery' %}" data-gallery-filter>{{ filter_form.as_p }}<button type="submit">应用筛选</button></form></details>
+<form id="management-selection" data-management-selection method="post" action="{% url 'management-preview' %}">{% csrf_token %}
+<input type="hidden" name="choose" value="1"><span data-management-count role="status">已选 0 张</span>
+<span data-management-hidden></span><button type="button" data-management-clear>清除选择</button><button type="submit">批量整理与更正</button><button type="submit" name="action" value="trash">核对批量移入回收站</button>
+<p data-management-message role="status">可跨页明确选择；改变筛选不会增加选择。</p><noscript>未启用脚本，仅提交当前页明确勾选的照片。</noscript></form>
+<div data-gallery data-gallery-loaded-cursor="{{ gallery_page.cursor }}" data-gallery-pages="{{ gallery_page_tokens|join:',' }}" data-gallery-species="{{ gallery_page.species.pk|default:'' }}">{% endif %}
+<div data-gallery-batch data-gallery-cursor="{{ gallery_page.cursor }}" data-gallery-next-cursor="{{ gallery_page.next_cursor|default:'' }}" data-gallery-dirty="{{ gallery_page.dirty|yesno:'true,false' }}" data-gallery-remaining="{{ gallery_page.remaining_count }}" data-gallery-species="{{ gallery_page.species.pk|default:'' }}">
+{% for group in gallery_page.groups %}<section data-gallery-month="{{ group.month }}" aria-label="{% if group.month == 'unknown' %}时间未知{% else %}{{ group.month }}{% endif %}">
+{% if group.title %}<h2>{{ group.title }}</h2>{% endif %}<div class="photo-grid">
+{% for photo in group.items %}<article class="photo-card" id="photo-{{ photo.pk }}" data-photo-id="{{ photo.pk }}"><label class="management-select"><input data-management-photo type="checkbox" name="photo_ids" value="{{ photo.pk }}" form="management-selection">选择此照片</label><a data-gallery-detail href="{% url 'detail' photo.id %}?{{ gallery_detail_query }}"><div class="image-frame">
+{% if photo.preview_key %}<img loading="lazy" width="480" height="360" src="{% url 'media' photo.id 'preview' %}" alt="{% for species in photo.gallery_species %}{{ species.display_name }}{% if not forloop.last %}、{% endif %}{% empty %}无法确定{% endfor %}"><span class="media-error" hidden>暂无预览</span>{% else %}<span>暂无预览</span>{% endif %}
+</div></a><p>{% for species in photo.gallery_species %}<a href="{% url 'gallery' %}?species={{ species.pk }}">{{ species.display_name }}</a>{% if not forloop.last %}、{% endif %}{% empty %}无法确定{% endfor %}</p>{% include 'archive/personal_controls.html' with personal_request_id=photo.personal_request_id gallery_card=True %}</article>{% endfor %}
+</div></section>{% empty %}<p>没有符合条件的照片。可清除条件或重新筛选。</p><a href="{% url 'workbench' %}">导入与审核</a>{% endfor %}
+</div>
+{% if gallery_next_url %}<div data-gallery-sentinel>
+<a class="button quiet" data-gallery-next="{{ gallery_page.next_cursor }}" data-gallery-url="{{ gallery_next_url }}" href="{% url 'gallery' %}?cursor={{ gallery_page.next_cursor|urlencode }}{% if gallery_page.species %}&amp;species={{ gallery_page.species.pk }}{% endif %}">下一页</a>
+<p data-gallery-message role="status" aria-live="polite" aria-atomic="true"></p>
+<button type="button" class="quiet" data-gallery-retry hidden>重试加载</button>
+<a data-gallery-refresh hidden href="{{ gallery_refresh_url }}">刷新相册</a>
+</div>{% elif gallery_page.items %}<p data-gallery-end>已到末尾</p>{% endif %}
+{% if not fragment %}</div>{% endif %}{% endblock %}

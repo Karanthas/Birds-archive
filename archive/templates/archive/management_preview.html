@@ -1,0 +1,23 @@
+{% extends 'archive/base.html' %}{% block content %}
+<a href="{% url 'gallery' %}">返回相册</a><h1>{% if restore_preview %}核对恢复{% elif trash_preview %}核对移入回收站{% else %}批量整理与更正{% endif %}</h1><p>明确选择 {{ total }} 张；{% if restore_preview %}仅完成后移回相册；回收前位置被占时自动加短后缀，保留两份文件。{% elif trash_preview %}确认后立即退出正常相册和鸟种计数，后台移动原图；原图与全部信息保留，可以恢复。{% else %}收藏、评分与地点立即保存，鸟种更正由后台完成。{% endif %}</p>
+{% if error_message %}<p role="alert">{{ error_message }}</p>{% endif %}
+{% if not has_results %}
+<form data-management-preview-form method="post" action="{% if preview %}{% url 'management-revise' preview.pk %}{% else %}{% url 'management-preview' %}{% endif %}">{% csrf_token %}
+{% if preview %}<input type="hidden" name="token" value="{{ token }}">{% endif %}
+{% if not trash_preview and not restore_preview %}<label>搜索鸟种 <input name="q" value="{{ query }}" maxlength="200"></label><button name="draft_search" value="1" formaction="{% url 'management-preview' %}">搜索并保留草稿</button>{% endif %}
+<fieldset><legend>本次明确对象（取消勾选后重新预览）</legend>{% for ident in photo_ids %}<label><input type="checkbox" name="photo_ids" value="{{ ident }}" checked>{{ ident }}</label>{% empty %}<p>未选择照片，请返回相册选择。</p>{% endfor %}</fieldset>
+{% if restore_preview %}<input type="hidden" name="action" value="restore">{% elif trash_preview %}<input type="hidden" name="action" value="trash">{% else %}{{ personal_batch_form.as_p }}<details><summary>鸟种操作设置（选择更正鸟种时使用）</summary>{{ form.as_p }}<fieldset><legend>操作鸟种</legend>{% for species in species_results %}<label><input type="checkbox" name="species_ids" value="{{ species.pk }}" {% if species.pk|stringformat:'s' in selected_ids %}checked{% endif %}>{{ species.display_name }}{% if species.source_kind == 'local' %}（本地名）{% endif %}</label>{% empty %}<p>搜索名录或复用本地鸟名，也可填写自定义名称。</p>{% endfor %}
+{% for name in local_names %}<input name="local_names" value="{{ name }}" maxlength="300" aria-label="本地鸟名">{% endfor %}<input name="local_names" maxlength="300" aria-label="添加本地鸟名"></fieldset>
+<p>添加／移除保留其他鸟种；空集合不会自动转为无法确定。</p></details>{% endif %}<button>重新核对影响</button></form>{% endif %}
+{% if preview %}<h2>逐张影响 · 修订 {{ preview.revision }}</h2><p>可受理 {{ ready }} / {{ total }} 张。{% if personal_preview %}只设置所列字段，版本变化逐张跳过。{% else %}目标如遇文件占位，将安全加短后缀，结果显示实际位置。{% endif %}</p>
+<div class="management-rows">{% for row in rows %}<article class="management-row">
+<a href="{% url 'detail' row.photo_id %}"><img loading="lazy" src="{% url 'media' row.photo_id 'thumb' %}" alt="查看所选照片" width="120" height="90"></a>
+<p>{{ row.photo_id }}</p>{% if restore_preview %}<p>回收位置：{{ row.source_path|default:"未知" }} → 回收前位置：{{ row.target_path|default:"不可恢复" }}</p><p>这是原位置参考；冲突后实际位置以完成结果为准。</p>{% elif trash_preview %}<p>当前位置：{{ row.source_path|default:'未知' }} → 移入回收站：{{ row.target_path|default:'不可回收' }}</p><p>原图与全部元数据保留，可以恢复。</p>{% elif personal_preview %}<p>原值：{{ row.old_display }} → 明确目标：{{ row.target_display }}</p><p>照片信息版本：{{ row.metadata_version }}</p>{% else %}<p>原鸟种：{{ row.old_labels|join:'、'|default:'无法确定' }} → 最终：{% if row.payload.mode == 'remove' and row.reason == '不能移除最后一个鸟种；如需无法确定，请另行明确选择。' %}不可更正（移除后为空）{% else %}{{ row.target.labels|join:'、'|default:'无法确定' }}{% endif %}</p>
+<p>当前位置：{{ row.source_path|default:'未知' }} → 目标目录与原文件名：{{ row.target_path|default:'不可更正' }}</p>
+{% endif %}
+{% if row.reason %}<p role="status">{{ row.reason }}</p>{% endif %}
+{% if row.result %}<p>{{ row.result_label }} {{ row.result.reason }}</p>{% endif %}
+{% if restore_preview and row.operation.status == "succeeded" %}<span hidden data-restored-photo="{{ row.photo_id }}"></span>{% endif %}{% if row.operation %}<p>{{ row.operation.status_label }} · {{ row.operation.stage_label }}</p><p>实际目标：{{ row.operation.target_relative_path|default:'等待固定' }}</p>{% if row.operation.error_code %}<p>{{ row.operation.display_error }}</p>{% endif %}{% endif %}
+</article>{% endfor %}</div>
+{% if ready and not has_results %}<form method="post" action="{% url 'management-submit' preview.pk %}">{% csrf_token %}<input type="hidden" name="token" value="{{ token }}"><button>{% if restore_preview %}确认恢复以上照片{% elif trash_preview %}确认移入回收站{% else %}确认受理以上明确影响{% endif %}</button></form>{% elif not ready %}<p role="status">没有可受理项，本次不会提交更正。</p>{% endif %}
+<a href="{% url 'management-display' preview.pk %}">刷新逐项结果</a>{% endif %}{% endblock %}

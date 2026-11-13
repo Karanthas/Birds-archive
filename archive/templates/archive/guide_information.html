@@ -1,0 +1,52 @@
+{% extends information_only|yesno:"archive/base.html,archive/task_fragment_base.html" %}
+{% block content %}{% if information_only %}<nav><a href="{% url 'guide_index' %}">返回图鉴</a>{% if information_return_url %} · <a href="{{ information_return_url }}">返回原照片／页面</a>{% endif %}</nav><h1>{{ species.display_name }}</h1><p>{{ species.scientific_name|default:"学名未知" }}</p>{% if candidate_information %}<p role="note">候选尚未确认；在线资料仅供查阅，不能代替人工选种。原审核页仍保留。</p>{% endif %}{% endif %}
+{% if guide_scientific_name and not species.scientific_name %}<p>资料对应学名：{{ guide_scientific_name }}</p>{% endif %}
+<div class="guide-reading" style="min-width:0;overflow-wrap:anywhere"><p class="field-help">{{ guide_data.origin }}{% if guide_data.published_at %} · 发布于 {{ guide_data.published_at|date:'Y-m-d H:i' }}{% endif %}</p>
+{% for name in guide_names %}
+<p>资料中文名：{{ name.text }}</p>
+{% for source in name.sources %}<details><summary>名称来源</summary><p><a href="{{ source.permalink }}" rel="noreferrer">{{ source.title }}</a> · {{ source.revision }}</p><p>{{ source.attribution }} · {{ source.rights }} · {{ source.translation_note }}</p></details>{% endfor %}
+{% endfor %}
+<section data-guide-online data-config-id="guide-online-config"><h2>概览</h2>
+{{ guide_online_config|json_script:"guide-online-config" }}
+<p data-guide-online-status role="status" aria-live="polite">正在检索资料；需要JavaScript加载在线摘要。</p>
+<div data-guide-online-result></div>
+<div style="display:flex;flex-wrap:wrap;gap:16px"><button type="button" class="quiet" data-guide-online-retry hidden>重新检索</button><button type="button" class="quiet" data-guide-online-cancel hidden disabled>取消检索</button></div>
+<p><a href="https://zh.wikipedia.org/w/index.php?title=Special:Search&amp;search={{ species.scientific_name|default:species.display_name|urlencode }}" rel="noreferrer">维基百科原站检索</a></p>
+<noscript><p>需JavaScript加载在线摘要；可打开原站检索，照片仍可浏览。</p></noscript></section>
+{% if guide_online_config.scope %}<details><summary>物种对应依据</summary><p>{{ guide_online_config.scope }}</p><p><a href="{{ guide_online_config.mapping_url }}" rel="noreferrer">已核对概念来源</a>；在线页面仍需核对公开实体和非消歧条目。</p></details>{% else %}<p>资料待匹配；同名检索不能证明对应同一物种。</p>{% endif %}
+<section aria-label="保护信息"><h2>保护信息</h2>
+  {% for record in protection_records %}
+  <p>{% if record.system == 'IUCN' %}全球受威胁等级 · IUCN{% else %}适用地区法定保护 · {{ record.system }}{% endif %}{% if record.region %} · {{ record.region }}{% endif %}：{{ record.status }}</p>
+  {% if record.note %}<p>{{ record.note }}</p>{% endif %}
+  <p class="field-help">{% if record.citation.value %}引用资料年份：{{ record.citation.value }} · {% endif %}{% if record.amendment.value %}修订年份：{{ record.amendment.value }} · {% endif %}{% if record.assessment.value %}评估资料年份：{{ record.assessment.value }} · {% endif %}精确评估日期：{{ record.assessment_date|default:'未知' }}{% if record.publication.value %} · 公布：{{ record.publication.value }} · 生效：{{ record.effective.value }}{% endif %}</p>
+  {% for source in record.sources %}
+  <p class="field-help">{{ source.attribution }} · <a href="{{ source.rights_url }}" rel="noreferrer">{{ source.rights }}</a> · {{ source.translation_note }}</p>
+  <details><summary>保护信息来源</summary>
+    <p><a href="{{ source.permalink }}" rel="noreferrer">{{ source.title }}</a> · {{ record.source_version }}</p>
+    <p>{{ source.date_kind }}：{{ source.date_value|default:'未知' }} · 核查／获取：{{ source.acquired_at }}</p>
+    <p><a href="{{ source.author_history }}" rel="noreferrer">作者历史／发布机构</a></p>
+    {% if record.assessment_doi %}<p><a href="{{ record.assessment_doi }}" rel="noreferrer">原评估引用（全文未直接核实）</a></p>{% endif %}
+  </details>
+  {% endfor %}
+  {% endfor %}
+  <p>国家一级／二级保护：未知。其他法定保护资料未核实；未查到不代表无保护。</p>
+</section>
+<section class="guide-similar"><h2>相似种</h2>
+{% if similar_cards %}<p>{{ similar_cards|length }} 个有来源的相似种</p>{% endif %}
+{% for card in similar_cards %}
+{% if forloop.counter == 4 %}<details class="guide-more"><summary>更多相似种（{{ similar_cards|length|add:'-3' }}）</summary>{% endif %}
+<article class="guide-compare" aria-label="{{ species.display_name }}与{{ card.display_name }}对照">
+<h3><a href="{{ card.url }}">{{ card.display_name }} · 查看资料</a></h3>
+<div class="guide-compare-pair">
+{% for side in card.sides %}<section><h4>{{ side.species.display_name }}</h4>
+{% if side.reference %}<figure>
+{% if side.reference.url %}<div class="image-frame"><img loading="lazy" width="480" height="360" src="{{ side.reference.url }}" alt="{{ side.reference.alt }}"><span class="media-error" hidden>{% if side.reference.kind == 'external' %}参考图暂不可用{% else %}暂无预览{% endif %}</span></div>{% endif %}
+<figcaption>{{ side.reference.note }}{% if side.reference.kind == 'external' %} · 作者：{{ side.reference.asset.author }} · <a href="{{ side.reference.asset.source_url }}" rel="noreferrer">来源</a> · <a href="{{ side.reference.original_source_url }}" rel="noreferrer">原来源</a> · <a href="{{ side.reference.asset.license_url }}" rel="noreferrer">{{ side.reference.asset.license }}</a> · {{ side.reference.asset.change_note }}{% endif %}</figcaption></figure>{% endif %}
+<p>{{ side.text }}</p></section>{% endfor %}</div>
+<p>{{ card.limitations }}</p>
+{% for source in card.sources %}<p class="field-help">{{ source.attribution }} · <a href="{{ source.rights_url }}" rel="noreferrer">{{ source.rights }}</a> · {{ source.translation_note }} · <a href="{{ source.permalink }}" rel="noreferrer">{{ source.title }} · {{ source.revision }}</a></p>{% endfor %}
+<p class="field-help"><a href="{{ card.fact_check_url }}" rel="noreferrer">独立事实核查：Cornell（仅链接）</a></p>
+</article>
+{% if forloop.last and forloop.counter > 3 %}</details>{% endif %}
+{% empty %}<p>相似种资料暂缺：暂无有来源相似种资料。</p>{% endfor %}</section></div>
+{% endblock %}

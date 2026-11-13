@@ -1,0 +1,16 @@
+{% if not status_row_only %}<section data-recognition-poll="{% url 'recognition-status' %}" aria-label="识别状态">
+<span data-recognition-count>待审核 {{ recognition_counts.review_count }} 张 · 识别处理中 {{ recognition_counts.pending_count }} 张</span>
+<time data-recognition-last-success datetime="{{ status_checked_at|date:'Y-m-d' }}T{{ status_checked_at|date:'H:i:s' }}Z">{{ status_checked_at|date:'H:i:s' }} UTC</time>
+<a href="{% if photo %}{{ detail_refresh_url }}{% else %}{% url 'workbench' %}?filter={{ filter_name }}&amp;page={{ page_obj.number }}{% endif %}" data-recognition-refresh>刷新识别状态</a>
+<span data-recognition-refresh-message role="status" aria-live="polite"></span>{% endif %}
+{% if photo %}<div data-recognition-status data-photo-id="{{ photo.pk }}" data-metadata-version="{{ photo.metadata_version }}" data-generation="{{ recognition.generation }}" data-run-id="{{ recognition.run_id|default:'' }}" data-active-generation="{{ recognition.active_generation }}" data-active-run-id="{{ recognition.active_run_id|default:'' }}">
+<span data-recognition-message>{{ recognition.message }}</span>
+{% if photo.state == 'review_pending' %}<a href="{% if recognition_controls %}#species-search{% else %}{% url 'detail' photo.pk %}#species-search{% endif %}">手动选种</a>{% endif %}
+{% if recognition_controls and photo.state == 'review_pending' %}
+<button class="quiet" type="submit" form="confirmation-form" name="draft_action" value="recognition_retry" data-recognition-action="{% url 'recognition-retry' photo.pk %}" data-recognition-kind="retry" {% if not recognition.retry_allowed %}hidden{% endif %}>重试识别</button>
+<button class="quiet" type="submit" form="confirmation-form" name="draft_action" value="recognition_rerun" data-recognition-action="{% url 'recognition-rerun' %}" data-recognition-kind="rerun" {% if not recognition.rerun_allowed %}disabled{% endif %}>重跑识别</button>
+<button class="quiet" type="submit" form="confirmation-form" name="draft_action" value="append" data-recognition-new hidden>查看新候选</button>
+{% else %}<a href="{% url 'detail' photo.pk %}" data-recognition-new hidden>查看新候选</a>{% endif %}
+<span data-recognition-action-message role="status" aria-live="polite"></span>
+</div>{% endif %}
+{% if not status_row_only %}</section>{% endif %}

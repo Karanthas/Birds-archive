@@ -1,0 +1,70 @@
+{% extends 'archive/base.html' %}{% block content %}<nav class="detail-navigation" aria-label="当前集合导航"><a href="{{ return_url }}" data-detail-return>{{ return_label|default:'返回' }}</a>
+{% if has_collection %}{% if previous_url %}<a class="button quiet" data-detail-previous href="{{ previous_url }}">上一张</a>{% else %}<button disabled>上一张</button>{% endif %}
+{% if next_url %}<a class="button quiet" data-detail-next href="{{ next_url }}">下一张</a>{% else %}<button disabled>下一张</button>{% endif %}{% else %}<span>未从浏览集合打开</span>{% endif %}</nav>
+<h1>{{ photo.display_name }}</h1>
+<div class="detail-image">{% if photo.preview_key %}<img src="{% url 'media' photo.id 'preview' %}" alt="{{ photo.display_name }}"><span data-media-loading role="status" hidden>加载中…</span><span class="media-error" hidden>暂无预览 <a href="{{ detail_refresh_url }}">刷新</a></span>{% else %}<span>暂无预览</span>{% endif %}</div>
+{% include 'archive/personal_controls.html' %}
+{% if not collection_visible or photo.trash_requested_at or photo.trashed_at %}<p role="status">照片已移入回收流程，请返回查看当前集合。<a href="{% url 'gallery' %}?view=trash">查看回收站</a></p>{% endif %}
+{% if photo.trash_requested_at or photo.trashed_at %}<section id="restore"><h2>回收与恢复</h2><p>此照片只读；原图、鸟种关联、收藏、评分、备注与时间地点均保留。</p><p>收藏：{{ photo.favorite|yesno:'是,否' }} · 评分：{{ photo.rating|default:'未评分' }}</p><p>备注：{{ photo.notes|default:'无' }}</p>{% if photo.trashed_at and not management_operation %}<a href="{% url 'detail' photo.pk %}?management_action=restore">核对恢复</a>{% endif %}</section>{% elif photo.current_classification and not management_operation %}<a href="{% url 'detail' photo.pk %}?management_action=trash">移入回收站</a>{% endif %}
+<details class="detail-information" {% if error_message or note_form.is_bound or location_form.is_bound or capture_draft or species_draft %}open{% endif %}><summary>信息</summary>
+<p>{{ photo.state_display }}</p><dl><dt>拍摄时间</dt><dd>{{ effective_capture.local|default:'未知' }} · {{ effective_capture_source }}</dd><dt>拍摄地点</dt><dd>{{ photo.user_location|default:'未知' }}</dd></dl>
+{% if not photo.trash_requested_at and not photo.trashed_at %}
+<details {% if note_form.is_bound or location_form.is_bound %}open{% endif %}><summary>备注与地点</summary>
+<p>已保存备注：<span data-note-saved>{{ photo.notes|default:'无' }}</span></p>
+<form method="post" data-note-form data-note-original="{{ photo.notes }}">{% csrf_token %}<input type="hidden" name="management_action" value="personal"><input type="hidden" name="personal_field" value="notes"><input type="hidden" name="metadata_version" value="{{ photo.metadata_version }}"><input type="hidden" name="request_id" value="{{ note_request_id }}">{{ note_form.as_p }}<div class="note-actions"><button type="submit">保存备注</button><a href="{{ detail_refresh_url }}" data-note-cancel>取消修改</a></div></form>
+{% if photo.current_classification %}<p>地点来源：{% if photo.user_location %}人工填写{% else %}未知{% endif %}</p><form method="post">{% csrf_token %}<input type="hidden" name="management_action" value="personal"><input type="hidden" name="personal_field" value="user_location"><input type="hidden" name="metadata_version" value="{{ photo.metadata_version }}"><input type="hidden" name="request_id" value="{{ location_request_id }}">{{ location_form.as_p }}<button type="submit">保存地点</button></form>{% endif %}</details>
+{% endif %}
+{% if management_status %}<section aria-label="更正状态"><p role="status">{{ management_status.status_label }} · {{ management_status.stage_label }}</p>
+{% if management_status.error_code %}<p>{{ management_status.display_error }}（{{ management_status.error_code }}）</p>{% endif %}
+<p>目标位置：{{ management_status.target_relative_path|default:'等待后台固定' }}</p>
+{% if management_status.status == 'blocked' or management_status.status == 'failed' %}<form method="post">{% csrf_token %}<input type="hidden" name="management_action" value="retry"><input type="hidden" name="operation_id" value="{{ management_status.pk }}"><input type="hidden" name="request_id" value="{{ retry_request_id }}"><button type="submit">{% if management_status.kind == 'trash' %}重试移入回收站{% elif management_status.kind == 'restore' %}重试恢复{% else %}重试原更正{% endif %}</button></form>{% endif %}</section>{% endif %}
+{% if current_original %}<p>当前原图位置：{{ current_original.relative_path }}</p>{% endif %}
+{% if photo.current_classification and not photo.trash_requested_at %}
+{% if not management_operation or capture_draft %}<details {% if capture_draft %}open{% endif %}><summary>更正拍摄时间{% if capture_draft %}（未保存草稿）{% endif %}</summary><form method="post">{% csrf_token %}
+<input type="hidden" name="management_action" value="capture">
+<input type="hidden" name="metadata_version" value="{{ photo.metadata_version }}">
+<input type="hidden" name="request_id" value="{{ management_request_id }}">
+{{ capture_form.as_p }}<button type="submit">保存时间更正</button>
+</form></details>{% endif %}{% endif %}
+{% include 'archive/tasks.html' with archive_only=True fragment=True %}
+{% if photo.current_classification and not photo.trash_requested_at %}{% if not management_operation or species_draft %}
+<details {% if species_draft %}open{% endif %}><summary>更正鸟种</summary>
+<form method="post" action="{% url 'management-preview' %}">{% csrf_token %}<input type="hidden" name="photo_ids" value="{{ photo.pk }}"><input type="hidden" name="choose" value="1">
+{% for ident in selected_ids %}<input type="hidden" name="species_ids" value="{{ ident }}">{% endfor %}{% for name in local_names %}<input type="hidden" name="local_names" value="{{ name }}">{% endfor %}
+<p>替换、添加或移除鸟种，先核对最终集合与目录，再提交。</p><button type="submit">核对鸟种更正</button></form></details>{% endif %}{% endif %}
+{% if confirmed_species %}<p>已确认：{% for species in confirmed_species %}<a href="{% url 'gallery' %}?species={{ species.pk }}">{{ species.display_name }}</a> · <a href="{% url 'guide_information' species.pk %}?return={{ request.path|urlencode }}" target="_blank" rel="noopener noreferrer">查看资料</a>{% if not forloop.last %}、{% endif %}{% endfor %}</p>{% elif archive_classification == 'undetermined' %}<p>无法确定</p>{% endif %}
+{% if collection_species %}<section aria-label="鸟种照片集合"><h2>{{ collection_species.display_name }}</h2>
+{% if collection_species.source_kind == 'local' %}<p>本地名，资料待补</p>{% else %}<p>{{ collection_species.scientific_name }}</p>{% endif %}
+{% for item in species_photos %}<a href="{% url 'detail' item.id %}">{% if item.preview_key %}<img src="{% url 'media' item.id 'thumb' %}" alt="查看照片">{% else %}查看照片{% endif %}</a>{% empty %}<p>暂无已归档照片</p>{% endfor %}</section>{% endif %}
+{% if error_message %}<div class="error-summary" data-error-summary id="confirmation-errors" tabindex="-1" role="alert">{{ error_message }}</div>
+{% if photo.state != 'review_pending' %}<section aria-label="未保存草稿"><h2>未保存草稿</h2>{% for species in selected_species %}<p>{{ species.display_name }}</p>{% endfor %}{% for name in local_names %}<p>{{ name }}</p>{% endfor %}</section>{% endif %}{% endif %}
+{% include 'archive/recognition_status.html' with recognition=recognition_status recognition_controls=True %}
+{% if photo.state == 'review_pending' %}
+<form id="confirmation-form" method="post" action="{% url 'detail' photo.id %}" data-pending-text="正在确认…" data-archive-confirm data-verify-url="{% url 'workbench' %}">{% csrf_token %}
+<input type="hidden" name="metadata_version" value="{{ confirmation_version }}">
+<input type="hidden" name="request_id" value="{{ request_id }}">
+<input type="hidden" name="recognition_request_id" value="{{ recognition_request_id }}">
+<input type="hidden" name="species_page" value="{{ species_search_page.number|default:1 }}">
+<label for="species-search">搜索鸟种</label>
+<input id="species-search" name="q" value="{{ query }}" maxlength="200">
+<button class="quiet" type="submit" name="draft_action" value="search">搜索</button>
+{% include 'archive/recognition_candidates.html' %}
+<fieldset><legend>鸟种（可多选）</legend><p>取消勾选可移除</p>
+{% for species in species_results %}<p><label><input type="checkbox" name="species_ids" value="{{ species.pk }}" {% if species.pk|stringformat:'s' in selected_ids %}checked{% endif %}>{{ species.display_name }} · {% if species.source_kind == 'local' %}本地名，资料待补{% else %}名录 · {{ species.scientific_name }}{% endif %}</label>
+{% if species.pk|stringformat:'s' in selected_ids %}<button class="quiet" type="submit" name="draft_action" value="remove" formaction="{% url 'detail' photo.id %}?draft_species={{ species.pk }}" aria-label="移除{{ species.display_name }}">移除</button>{% else %}<button class="quiet" type="submit" name="draft_action" value="add" formaction="{% url 'detail' photo.id %}?draft_species={{ species.pk }}" aria-label="添加{{ species.display_name }}">添加</button>{% endif %}</p>{% empty %}<p>搜索并选择鸟种</p>{% endfor %}
+{% if species_search_previous %}<button class="quiet" type="submit" name="draft_action" value="page" formaction="{% url 'detail' photo.id %}?draft_page={{ species_search_previous }}">上一页鸟种</button>{% endif %}
+{% if species_search_next %}<button class="quiet" type="submit" name="draft_action" value="page" formaction="{% url 'detail' photo.id %}?draft_page={{ species_search_next }}">下一页鸟种</button>{% endif %}
+</fieldset>
+<fieldset><legend>本地鸟名</legend>{% for name in local_names %}<p><input name="local_names" value="{{ name }}" maxlength="300" aria-label="本地鸟名"></p>{% endfor %}
+<p><input name="local_names" maxlength="300" aria-label="添加本地鸟名"><button class="quiet" type="submit" name="draft_action" value="append">继续添加</button></p></fieldset>
+<button type="submit" name="classification" value="species">确认并归档</button>
+<button class="quiet" type="submit" name="classification" value="undetermined">无法确定并归档</button></form>{% endif %}
+{% if saved_message %}<p role="status">{{ saved_message }}</p>{% endif %}
+{% if photo.can_fill_capture %}<a href="{% url 'capture-time' photo.id %}?filter={{ return_filter }}&amp;page={{ return_page }}">补充时间</a>{% endif %}
+{% if photo.state == 'review_pending' %}<a href="{% url 'location' %}?photo_ids={{ photo.id }}&amp;filter=all&amp;page={{ location_page }}">填写地点</a>{% endif %}
+<details><summary>拍摄信息</summary><dl><dt>原始 EXIF</dt><dd>{{ photo.captured_local|default:'未知' }} · {{ photo.capture_quality_display }}</dd><dt>人工补充</dt><dd>{% if photo.manual_capture %}{{ photo.manual_capture.local }}{% else %}未知{% endif %}</dd><dt>精度</dt><dd>{{ photo.capture_precision_display }}</dd><dt>UTC 偏移</dt><dd>{{ photo.capture_offset_display }}</dd></dl>
+{% for key,value in photo.exif_raw.items %}<p>{{ key }}：{{ value|default_if_none:'未知' }}</p>{% endfor %}</details>
+{% if download_available %}<a href="{% url 'download-original' photo.id %}">下载原图</a>{% elif not original_available %}<p role="status">原图当前不可用</p>{% endif %}
+<details><summary>文件信息</summary><p>{{ photo.id }}</p>{% for observation in observations %}<p>{{ observation.display_path }} · 版本 {{ observation.version }} · {% if observation.is_current %}当前来源{% else %}历史来源{% endif %}{% if observation.duplicate %} · 重复来源{% endif %}{% if not observation.available %} · 来源不可用{% endif %}</p>{% empty %}<p>暂无有效来源</p>{% endfor %}
+{% for job in jobs %}<p>版本 {{ job.source_version }} · {% if job.kind == 'archive' %}归档 · {{ job.state_label }} · {{ job.stage_label }}{% if job.state == 'failed' or job.state == 'blocked' %} · {{ job.display_error }}{% endif %}{% elif job.state == 'succeeded' %}导入任务已完成{% elif job.state == 'running' %}处理中{% elif job.state == 'retry_wait' %}等待重试：{{ job.next_attempt_at|date:'Y-m-d H:i:s' }} UTC{% elif job.state == 'stale' %}来源已变化{% elif job.state == 'failed' %}{{ job.display_error }}{% else %}待处理{% endif %}</p>{% endfor %}<a href="{% url 'tasks' %}">查看任务</a></details></details>
+<dialog data-note-leave aria-labelledby="note-leave-title"><h2 id="note-leave-title">备注尚未保存</h2><p>处理这次修改后再离开照片。</p><p data-note-leave-error role="alert"></p><div class="note-leave-actions"><button type="button" data-note-save-leave>保存后继续</button><button type="button" class="quiet" data-note-discard>放弃修改</button><button type="button" class="quiet" data-note-stay>继续编辑</button></div></dialog>{% endblock %}

@@ -1,0 +1,15 @@
+{% extends fragment|yesno:'archive/task_fragment_base.html,archive/base.html' %}
+{% block content %}{% if not fragment %}
+<nav class="guide-return" aria-label="图鉴返回"><a href="{{ guide_return_url }}">返回图鉴</a><a href="{{ album_return_url }}">返回相册</a></nav>
+{% if related_return_url %}<p><a class="button quiet" href="{{ related_return_url }}">返回{{ related_return_name }}的对照</a> · 尚无照片</p>{% endif %}
+<h1>{{ species.display_name }}</h1><p class="field-help">{{ species.scientific_name|default:'学名未知' }} · {{ species.pk|stringformat:'s'|slice:':8' }}{% if not species.chinese_name and species.source_kind != 'local' %} · 中文名暂缺{% endif %}</p>
+{% include 'archive/guide_information.html' with information_only=False %}
+<section class="guide-photos"><h2>我的照片</h2><p>{{ gallery_page.remaining_count }} 张照片</p>
+<p role="status" data-gallery-changes {% if not gallery_page.dirty %}hidden{% endif %}>照片信息已变化，本集合保持原顺序与分组。<span data-gallery-remaining>本集合剩余 {{ gallery_page.remaining_count }} 张。</span><a href="{{ gallery_refresh_url }}">刷新本种照片</a></p>
+<div data-gallery data-guide-photos="true" data-gallery-loaded-cursor="{{ gallery_page.cursor }}" data-gallery-pages="{{ gallery_page_tokens|join:',' }}" data-gallery-species="{{ species.pk }}">{% endif %}
+<div data-gallery-batch data-gallery-cursor="{{ gallery_page.cursor }}" data-gallery-next-cursor="{{ gallery_page.next_cursor|default:'' }}" data-gallery-dirty="{{ gallery_page.dirty|yesno:'true,false' }}" data-gallery-remaining="{{ gallery_page.remaining_count }}" data-gallery-species="{{ species.pk }}">
+{% for group in gallery_page.groups %}<section data-gallery-month="{{ group.month }}" aria-label="{{ group.month }}">{% if group.title %}<h2>{{ group.title }}</h2>{% endif %}<div class="photo-grid">
+{% for photo in group.items %}<article class="photo-card" id="photo-{{ photo.pk }}" data-photo-id="{{ photo.pk }}"><a data-gallery-detail href="{% url 'detail' photo.pk %}?{{ gallery_detail_query }}"><div class="image-frame">{% if photo.preview_key %}<img loading="lazy" width="480" height="360" src="{% url 'media' photo.pk 'preview' %}" alt="{{ species.display_name }}"><span class="media-error" hidden>暂无预览</span>{% else %}<span>暂无预览</span>{% endif %}</div><p>{{ species.display_name }} · {{ photo.gallery_capture.local|default:'拍摄时间未知' }}</p></a></article>{% endfor %}
+</div></section>{% empty %}<p>尚无照片。</p>{% endfor %}</div>
+{% if gallery_next_url %}<div data-gallery-sentinel><a class="button quiet" data-gallery-next="{{ gallery_page.next_cursor }}" data-gallery-url="{{ gallery_next_url }}" href="{{ gallery_next_url }}">下一页</a><p data-gallery-message role="status" aria-live="polite" aria-atomic="true"></p><button type="button" class="quiet" data-gallery-retry hidden>重试加载</button><a data-gallery-refresh hidden href="{{ gallery_refresh_url }}">刷新本种照片</a></div>{% elif gallery_page.items %}<p data-gallery-end>已到末尾</p>{% endif %}
+{% if not fragment %}</div></section>{% endif %}{% endblock %}

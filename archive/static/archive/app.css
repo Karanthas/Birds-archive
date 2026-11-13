@@ -1,0 +1,142 @@
+:root {
+  --paper:#F7F8F3; --surface:#FFFFFF; --ink:#243A31; --muted:#617268; --green:#2E5344;
+  --line:#C3CEC7; --xs:4px; --sm:8px; --md:16px; --lg:24px; --xl:32px; --xxl:48px; --xxxl:64px;
+  font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  color:var(--ink); background:var(--paper); font-size:16px; line-height:1.5;
+}
+* {box-sizing:border-box}
+body {margin:0}
+a {color:inherit; text-underline-offset:4px; overflow-wrap:anywhere}
+main a:not(:has(.image-frame)), nav a {min-width:44px; min-height:44px; max-width:100%; display:inline-flex; align-items:center}
+button,input,select,textarea {font:inherit; color:inherit}
+button,a,input,summary {touch-action:manipulation}
+:is(a,button,input,select,textarea,summary):focus-visible {outline:2px solid var(--green); outline-offset:4px}
+header {max-width:1200px; margin:auto; padding:24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap}
+.brand {font-size:20px; font-weight:600; text-decoration:none; min-height:44px; display:flex; align-items:center}
+nav {display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin:8px 0 16px}
+nav a, main > a {display:inline-flex; align-items:center; min-height:44px; min-width:44px; padding:8px 4px}
+nav [aria-current] {font-weight:600; text-decoration-thickness:2px}
+nav form {margin:0}
+header nav {margin:0}
+main {max-width:1200px; margin:auto; padding:16px 24px 48px; overflow-wrap:anywhere}
+h1 {font-size:28px; line-height:1.2; font-weight:600; margin:16px 0 24px; overflow-wrap:anywhere}
+h2 {font-size:20px; line-height:1.2; font-weight:600}
+button {min-height:44px; min-width:44px; padding:8px 16px; color:#fff; background:var(--green); border:1px solid var(--green); border-radius:4px; cursor:pointer}
+button:disabled {opacity:.7; cursor:wait}
+[data-personal-controls] {margin:8px 16px 16px}
+[data-personal-controls] form {display:flex; flex-wrap:wrap; gap:4px; margin:4px 0}
+[data-personal-controls] button {padding:8px; background:var(--surface); color:var(--green)}
+[data-personal-controls] button[aria-pressed="true"] {background:var(--green); color:#fff}
+.quiet {background:transparent; color:var(--ink); border-color:var(--muted)}
+input:not([type=checkbox]) {width:100%; min-width:0; min-height:44px; border:1px solid var(--muted); border-radius:4px; padding:8px; background:var(--surface); color:var(--ink)}
+input[type=checkbox] {width:20px; height:20px; margin:0; accent-color:var(--green); flex:none}
+label {display:block; font-size:14px; margin:16px 0 8px}
+main > form:not([data-selection]) {max-width:640px; margin-bottom:24px}
+main > form:not([data-selection]) button {margin-top:16px}
+.error {margin:16px 0; padding:16px; border:1px solid var(--muted); border-radius:4px; overflow-wrap:anywhere}
+.error a {display:block; min-height:44px; padding:8px 0}
+.errorlist {padding-left:24px}
+.page-heading {display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap}
+.page-heading span, .status-strip {font-size:14px; color:var(--muted)}
+.status-strip {display:flex; align-items:center; gap:8px 16px; flex-wrap:wrap}
+.status-strip a {min-height:44px; display:flex; align-items:center}
+.photo-grid {display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; align-items:start}
+.photo-card {position:relative; min-width:0; background:var(--surface); border-radius:8px; overflow:hidden}
+.photo-card a {text-decoration:none}
+.photo-card a:has(.image-frame) {display:block}
+.photo-card > a:not(:has(.image-frame)) {display:inline-flex; min-height:44px; align-items:center; margin:0 16px}
+.photo-card .photo-select {position:absolute; top:8px; left:8px; z-index:1; display:flex; align-items:center; gap:8px; margin:0; padding:8px; min-height:44px; background:var(--surface); border:1px solid var(--muted); border-radius:4px; cursor:pointer}
+.image-frame {aspect-ratio:4/3; position:relative; background:var(--paper); display:flex; align-items:center; justify-content:center}
+.image-frame img {width:100%; height:100%; object-fit:contain}
+.photo-card h2 {font-size:16px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin:16px 16px 8px; overflow-wrap:anywhere}
+.photo-card p {margin:8px 16px 16px; color:var(--muted); font-size:14px}
+.photo-card > form {margin:16px}
+.photo-card > details {margin:16px}
+.source-card {grid-column:1/-1; display:flex; align-items:center; gap:8px 16px; flex-wrap:wrap; padding:8px 16px}
+.source-card h2,.source-card p,.source-card > a:not(:has(.image-frame)),.source-card > details {margin:0}
+.source-card h2 {flex:1; min-width:120px}
+.source-card details {width:100%}
+.field-help {font-size:14px; color:var(--muted); margin:8px 0}
+#task-status > .photo-card {margin:16px 0; padding:8px 0}
+.selection-tools {position:sticky; bottom:16px; display:flex; gap:16px; flex-wrap:wrap; align-items:center; width:fit-content; max-width:100%; padding:16px; margin:16px 0; background:var(--surface); border:1px solid var(--muted); border-radius:8px}
+.selection-page {display:flex; align-items:center; gap:8px; min-height:44px; width:fit-content}
+.selection-page:has(input[hidden]) {display:none}
+.selection-tools button {max-width:100%; white-space:normal; overflow-wrap:anywhere}
+[data-selection-message]:empty {display:none}
+.detail-image {background:var(--paper)}
+.detail-image img {display:block; width:100%; max-height:70vh; object-fit:contain}
+.media-error, [data-media-loading] {padding:16px}
+details {margin-top:24px}
+summary {min-height:44px; padding:8px 0; cursor:pointer}
+dt {font-size:14px; color:var(--muted)}
+dd {margin:0 0 16px; overflow-wrap:anywhere}
+ul {padding-left:24px}
+li {margin-bottom:16px}
+.empty {padding:64px 0; color:var(--muted)}
+.skip {position:absolute; left:16px; top:-100px}
+.skip:focus {top:8px; background:#fff; padding:8px; z-index:2}
+[hidden] {display:none!important}
+[data-gallery-month] {margin-bottom:32px}
+[data-gallery] .photo-card p a {display:inline-flex; min-height:44px; min-width:44px; max-width:calc(100% - 8px); align-items:center; padding:8px 4px; margin-inline-end:8px; white-space:normal; overflow-wrap:anywhere}
+[data-gallery] .photo-card p {line-height:1.7}
+[data-archive-confirm] fieldset {min-inline-size:0; margin:24px 0 0; padding:16px; border:1px solid var(--line); border-radius:4px}
+[data-archive-confirm] fieldset p {margin:8px 0}
+[data-archive-confirm] fieldset label {margin:0; overflow-wrap:anywhere}
+[data-archive-confirm] button {max-width:100%; white-space:normal; overflow-wrap:anywhere}
+[data-gallery] .photo-card:focus-within {outline:2px solid var(--green); outline-offset:4px}
+[data-gallery-sentinel] {min-height:48px; margin:16px 0; color:var(--muted)}
+[data-gallery-message] {margin:8px 0}
+[data-gallery-end] {color:var(--muted); font-size:14px; margin:24px 0}
+@media(max-width:1023px) {.photo-grid {grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:639px) {
+  header,main {padding:16px}
+  header {padding-top:8px; padding-bottom:8px; gap:8px}
+  .page-heading h1 {margin:8px 0 16px}
+  .photo-grid {grid-template-columns:minmax(0,1fr)}
+  nav {gap:8px 16px}
+  .page-heading {gap:0}
+  .selection-tools {bottom:8px}
+}
+/* Explicit management selection remains reachable on touch and keyboard. */
+[data-management-selection] {display:flex; flex-wrap:wrap; align-items:center; gap:.65rem; margin-block:1rem;}
+[data-management-selection] p {flex-basis:100%; margin:0;}
+.management-select {display:flex; align-items:center; gap:.5rem; padding:.6rem; min-height:44px;}
+.management-rows {display:grid; gap:1rem; margin-block:1rem;}
+.management-row {border:1px solid var(--border, #ddd); border-radius:.5rem; padding:1rem; overflow-wrap:anywhere;}
+.management-row img {object-fit:cover; border-radius:.25rem;}
+.management-row p {margin-block:.5rem;}
+.gallery-filters {margin-block:1rem;}
+.gallery-filters form {max-width:48rem;}
+.gallery-filters [id="id_species"] {max-height:16rem; overflow:auto;}
+.detail-navigation,.note-leave-actions {display:flex; flex-wrap:wrap; gap:.75rem; align-items:center; margin-block:1rem;}
+.note-actions {display:flex; flex-wrap:wrap; gap:var(--md); align-items:center; margin-block:var(--md);}
+.detail-information {margin-top:1rem;}
+.detail-image {min-height:15rem;}
+[data-note-leave] {max-width:min(30rem,calc(100% - 2rem)); border:1px solid var(--line); border-radius:.5rem; padding:1.5rem;}
+[data-note-leave]::backdrop {background:rgba(0,0,0,.45);}
+/* 图鉴延续照片网格，完整物种名称不使用两行截断。 */
+.guide-card h2 {display:block; overflow:visible; -webkit-line-clamp:unset; font-weight:600; line-height:1.5}
+.guide-card a {max-width:100%; overflow-wrap:anywhere}
+.guide-card:focus-within {outline:2px solid var(--green); outline-offset:4px}
+.guide-pages,.guide-return {display:flex; flex-wrap:wrap; align-items:center; gap:16px; margin-block:24px}
+.guide-reading {max-width:720px}
+.guide-source-links {display:flex; flex-wrap:wrap; align-items:center; gap:8px}
+.guide-reading section,.guide-photos {margin-top:32px}
+[data-guide-search] {max-width:640px; margin-bottom:24px}
+[data-guide-search] button {margin-top:16px; max-width:100%; white-space:normal}
+.guide-grid {grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px}
+@media(max-width:1023px) {.guide-grid {grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:639px) {.guide-grid {grid-template-columns:minmax(0,1fr)}}
+.guide-similar {min-width:0; overflow-wrap:anywhere}
+.guide-similar h3 {font-size:20px; font-weight:600; line-height:1.2}
+.guide-similar h4 {font-size:16px; font-weight:600; line-height:1.5}
+.guide-similar .guide-compare {margin-block:24px; padding:16px; border:1px solid var(--line); border-radius:8px}
+.guide-similar .guide-compare-pair {display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; align-items:start}
+.guide-similar .guide-compare-pair section {min-width:0}
+.guide-similar figure {margin:0 0 16px}
+.guide-similar .image-frame {aspect-ratio:4/3; overflow:hidden}
+.guide-similar .image-frame img {width:100%; height:100%; object-fit:contain}
+.guide-similar figcaption {font-size:.875rem; line-height:1.6; overflow-wrap:anywhere}
+.guide-similar a, .guide-similar summary {min-height:44px; display:inline-flex; align-items:center; flex-wrap:wrap}
+.guide-similar .guide-more > summary {display:list-item; padding-block:12px; cursor:pointer}
+@media(max-width:639px) {.guide-similar .guide-compare-pair {grid-template-columns:minmax(0,1fr)}}

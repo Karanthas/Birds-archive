@@ -1,0 +1,105 @@
+{
+  "compose_file": "../../compose.yaml",
+  "deploy_env_file": null,
+  "upgrade_env_file": null,
+  "backup_directory": null,
+  "host": {
+    "fnos_version": null,
+    "docker_version": null,
+    "compose_version": null,
+    "architecture": null,
+    "existing_services_and_ports": null,
+    "registered_deployments": null,
+    "memory_available_mib": null
+  },
+  "deployment": {
+    "project_name": null,
+    "deployment_id": null,
+    "roots_parent": null,
+    "inbox": null,
+    "data": null,
+    "archive": null,
+    "claim": null,
+    "volume_layout_and_filesystems": null,
+    "inbox_claim_same_mount": null,
+    "data_on_local_volume": null,
+    "archive_cross_volume": null,
+    "uid": null,
+    "gid": null,
+    "ownership_permissions_acl": null,
+    "maintenance_window": null
+  },
+  "recovery": {
+    "restore_env_file": null,
+    "restore_project_name": null,
+    "restore_deployment_id": null,
+    "restore_roots_parent": null,
+    "backup_volume": null,
+    "backup_available_bytes": null,
+    "retained_backup_set": null,
+    "power_loss_test_scope": null
+  },
+  "materials": {
+    "current_app_image": null,
+    "current_app_image_id_or_digest": null,
+    "upgrade_app_image": null,
+    "upgrade_app_image_id_or_digest": null,
+    "base_image_id_or_digest": null,
+    "proxy_image_digest": null,
+    "tunnel_image_digest": null,
+    "source_sha256": null,
+    "upgrade_source_sha256": null,
+    "python_version": null,
+    "sqlite_source_id": null,
+    "python_tree_sha256": null,
+    "model_offline_directory": null,
+    "model_manifest_digest": null,
+    "model_revision": null,
+    "recognition_cpu_memory_budget": null
+  },
+  "access": {
+    "existing_domain": null,
+    "dns_hosting_and_permission": null,
+    "lan_hostname": null,
+    "lan_ipv4": null,
+    "remote_hostname": null,
+    "remote_ipv4": null,
+    "tunnel_organization": null,
+    "tunnel_id": null,
+    "private_route_and_policy_file": null,
+    "lan_tls_directory": null,
+    "remote_tls_directory": null,
+    "certificate_renewal_owner": null,
+    "certificate_renewal_method": null
+  },
+  "credential_file_locations": {
+    "deployment_secret_env_file": null,
+    "tunnel_credentials_file": null,
+    "dns_credentials_file": null,
+    "device_ca_store": null
+  },
+  "clients": {
+    "windows": {
+      "os_version": null,
+      "browser_and_version": null,
+      "one_client_version": null,
+      "powershell_version": null,
+      "delivery_tool_version": null
+    },
+    "macos": {
+      "os_version": null,
+      "browser_and_version": null,
+      "one_client_version": null
+    },
+    "android": {
+      "os_version": null,
+      "browser_and_version": null,
+      "one_client_version": null
+    },
+    "iphone": {
+      "os_version": null,
+      "browser_and_version": null,
+      "one_client_version": null
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "mappings": [
+    {
+      "concept_key": "avibase:49D9148A171E7F2E:avilist-2025:v1",
+      "scientific_name": "Ardea alba",
+      "snapshot_version": "v2025b",
+      "snapshot_sha256": "c03d5fbcfe18d75ce08f08d3bd4c03f056ced508cbc1b27a6c6d25a5220e2250",
+      "external_id": "avibase-49D9148A",
+      "crosswalk_url": "https://avibase.bsc-eoc.org/species.jsp?avibaseid=49D9148A171E7F2E",
+      "identifier_evidence": "Avibase identifiers在同一页面明确并列49D9148A171E7F2E及avibase-49D9148A；Avilist 2025行为Ardea alba [version 1]。从正式CSV原行读取短标识，不执行截断推定。",
+      "scope": "AviList 2025整体种；大白鹭含alba、melanorhynchos、egretta、modesta，不跟随其他分类拆分。",
+      "qid": "Q130730",
+      "checked_at": "2026-10-26",
+      "local_bindings": [],
+      "snapshot_evidence": "AviList-v2025b-explorer-extended.csv正式输入；sha256及species行核对保存在05-02/source-review.json。"
+    },
+    {
+      "concept_key": "avibase:F9E375109E961EAC:avilist-2025:v1",
+      "scientific_name": "Pycnonotus jocosus",
+      "snapshot_version": "v2025b",
+      "snapshot_sha256": "c03d5fbcfe18d75ce08f08d3bd4c03f056ced508cbc1b27a6c6d25a5220e2250",
+      "external_id": "avibase-F9E37510",
+      "crosswalk_url": "https://avibase.bsc-eoc.org/species.jsp?avibaseid=F9E375109E961EAC",
+      "identifier_evidence": "Avibase identifiers在同一页面明确并列F9E375109E961EAC及avibase-F9E37510；Avilist 2025行为Pycnonotus jocosus [version 1]。从正式CSV原行读取短标识，不执行截断推定。",
+      "scope": "AviList 2025 Pycnonotus jocosus，Avibase概念版本1，同页地理范围与Wikipedia物种范围核对。",
+      "qid": "Q501063",
+      "checked_at": "2026-10-26",
+      "local_bindings": [],
+      "snapshot_evidence": "AviList-v2025b-explorer-extended.csv正式输入；sha256及species行核对保存在05-02/source-review.json。"
+    },
+    {
+      "concept_key": "avibase:4E74AE2276258520:avilist-2025:v1",
+      "scientific_name": "Cardinalis cardinalis",
+      "snapshot_version": "v2025b",
+      "snapshot_sha256": "c03d5fbcfe18d75ce08f08d3bd4c03f056ced508cbc1b27a6c6d25a5220e2250",
+      "external_id": "avibase-4E74AE22",
+      "crosswalk_url": "https://avibase.bsc-eoc.org/species.jsp?avibaseid=4E74AE2276258520",
+      "identifier_evidence": "Avibase identifiers在同一页面明确并列4E74AE2276258520及avibase-4E74AE22；Avilist 2025行为Cardinalis cardinalis [version 1]。从正式CSV原行读取短标识，不执行截断推定。",
+      "scope": "AviList 2025 Cardinalis cardinalis，Avibase概念版本1，同页地理范围与Wikipedia物种范围核对。",
+      "qid": "Q726389",
+      "checked_at": "2026-10-26",
+      "local_bindings": [],
+      "snapshot_evidence": "AviList-v2025b-explorer-extended.csv正式输入；sha256及species行核对保存在05-02/source-review.json。"
+    },
+    {
+      "concept_key": "avibase:DE21A6BE0D3EE1AD:avilist-2025:v1",
+      "scientific_name": "Cardinalis sinuatus",
+      "snapshot_version": "v2025b",
+      "snapshot_sha256": "c03d5fbcfe18d75ce08f08d3bd4c03f056ced508cbc1b27a6c6d25a5220e2250",
+      "external_id": "avibase-DE21A6BE",
+      "crosswalk_url": "https://avibase.bsc-eoc.org/species.jsp?avibaseid=DE21A6BE0D3EE1AD",
+      "identifier_evidence": "Avibase identifiers在同一页面明确并列DE21A6BE0D3EE1AD及avibase-DE21A6BE；Avilist 2025行为Cardinalis sinuatus [version 1]。从正式CSV原行读取短标识，不执行截断推定。",
+      "scope": "AviList 2025 Cardinalis sinuatus，Avibase概念版本1，同页地理范围与Wikipedia物种范围核对。",
+      "qid": null,
+      "checked_at": "2026-10-26",
+      "local_bindings": [],
+      "snapshot_evidence": "AviList-v2025b-explorer-extended.csv正式输入；sha256及species行核对保存在05-02/source-review.json。"
+    }
+  ]
+}

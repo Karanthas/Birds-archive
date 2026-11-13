@@ -1,0 +1,12 @@
+{% extends 'archive/base.html' %}{% block content %}
+<section data-guide-index>
+<a href="{{ album_return_url|default:'/' }}">返回相册</a><h1 tabindex="-1" data-guide-heading>我拍过的鸟种</h1>
+<form method="get" action="{% url 'guide_index' %}" data-guide-search>{% if guide_params.album_cursor %}<input type="hidden" name="album_cursor" value="{{ guide_params.album_cursor }}"><input type="hidden" name="album_loaded" value="{{ guide_params.album_loaded }}">{% endif %}<label for="guide-query">中文名／学名</label><input id="guide-query" name="q" maxlength="200" value="{{ query }}"><button type="submit">搜索鸟种</button></form>
+<p role="status" aria-live="polite" data-guide-message></p><button type="button" class="quiet" data-guide-retry hidden>重试</button>
+{% if error_message %}<p class="error" role="alert">{{ error_message }}</p><a href="{% url 'guide_index' %}?q={{ query|urlencode }}">重试</a>
+{% else %}<p>{{ page_obj.paginator.count }} 种鸟</p><div class="photo-grid guide-grid">
+{% for card in page_obj %}<article class="photo-card guide-card" id="species-{{ card.species.pk }}"><a href="{{ card.url }}"><div class="image-frame">{% if card.cover.preview_key %}<img loading="lazy" width="480" height="360" src="{% url 'media' card.cover.pk 'preview' %}" alt="{{ card.display_name }}"><span class="media-error" hidden>暂无预览</span>{% else %}<span>暂无预览</span>{% endif %}</div><h2>{{ card.display_name }}</h2><p>{% if not card.species.chinese_name and card.species.source_kind != 'local' %}中文名暂缺 · {% endif %}{{ card.scientific_name|default:'学名未知' }} · {{ card.species.pk|stringformat:'s'|slice:':8' }}</p><p>{{ card.photo_count }} 张照片</p></a></article>
+{% empty %}{% if query %}<p>没有找到已拍鸟种。试试其他名称或清除搜索。</p>{% else %}<div class="empty"><p>还没有已拍鸟种。</p><p>照片确认并归档后，会显示在这里。</p><a href="{% url 'workbench' %}">导入与审核</a></div>{% endif %}{% endfor %}</div>{% endif %}
+{% if query %}<a data-guide-page href="{{ clear_url }}">清除搜索</a>{% endif %}
+{% if previous_url or next_url %}<nav class="guide-pages" aria-label="图鉴分页">{% if previous_url %}<a data-guide-page href="{{ previous_url }}">上一页</a>{% endif %}<span>第 {{ page_obj.number }} / {{ page_obj.paginator.num_pages }} 页</span>{% if next_url %}<a data-guide-page href="{{ next_url }}">下一页</a>{% endif %}</nav>{% endif %}
+</section>{% endblock %}

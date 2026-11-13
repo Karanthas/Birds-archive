@@ -1,0 +1,17 @@
+<details data-recognition-candidates data-run-id="{{ candidates.run.pk|default:'' }}" {% if not candidates.manual_first %}open{% endif %}>
+<summary>识别候选{% if candidates.ambiguity == 'close' %} · 分数接近{% elif candidates.ambiguity == 'unknown' %} · 阈值未校验{% endif %}</summary>
+<p>候选尚未确认，请按照片逐项选种。资料在新页打开，原审核草稿保留。</p>
+<ol>{% for item in candidates.items %}<li data-recognition-candidate="{{ item.rank }}">
+{% if item.species %}{{ item.species.display_name }} · {{ item.species.scientific_name }}{% if not item.species.chinese_name %} · 中文名未知{% endif %}
+<a href="{% url 'guide_information' item.species.pk %}?candidate=1&amp;return={{ request.path|urlencode }}" target="_blank" rel="noopener noreferrer">查看资料</a>
+{% if photo.state == 'review_pending' %}<button class="quiet" type="submit" name="draft_action" value="candidate" formaction="{% url 'detail' photo.id %}?candidate_run={{ candidates.run.pk }}&amp;candidate_rank={{ item.rank }}" aria-label="添加候选{{ item.species.display_name }}">加入草稿</button>{% endif %}
+{% else %}{{ item.raw_label }} · 未映射 <a href="#species-search">手动搜索</a>{% endif %}
+<details><summary>来源</summary><p>模型标签：{{ item.raw_label }}</p>{% if item.species %}<p>{{ item.species.source_snapshot.source }} · {{ item.species.source_snapshot.version }}</p><p>{{ item.mapping_evidence }}</p>{% endif %}</details>
+</li>{% empty %}<li>暂无候选</li>{% endfor %}</ol>
+{% if candidates.run %}<details><summary>识别来源</summary><p>{{ candidates.run.artifact.provider }} · {{ candidates.run.artifact.version }} · {{ candidates.run.artifact.revision }}</p>
+<p>词表：{{ candidates.policy.label_digest|default:'未知' }}</p><p>模型包：{{ candidates.run.artifact.manifest_digest }}</p>
+<p>策略：{{ candidates.policy.threshold_version|default:'未知' }} · Top1−Top2 ≤ {% if candidates.policy.margin_threshold != None %}{{ candidates.policy.margin_threshold }}{% else %}未知{% endif %}</p>
+<p>{{ candidates.policy.calibration_evidence|default:'阈值未校验' }}</p></details>
+<details data-recognition-scores><summary>模型分数</summary><p>{{ candidates.policy.score_kind|default:'分数类型未知' }} · 用于排序，未经准确性校准。</p>
+{% for item in candidates.items %}<p>{{ item.rank }} · {{ item.score }}</p>{% endfor %}</details>{% endif %}
+</details>

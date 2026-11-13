@@ -1,0 +1,2 @@
+{% extends 'archive/base.html' %}{% block content %}<h1>相册暂不可读</h1><p role="alert">{{ error_message }}</p>
+{% if filter_form %}{{ filter_form.errors }}{% endif %}<a href="{% url 'gallery' %}">重新筛选</a>{% endblock %}

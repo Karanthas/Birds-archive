@@ -1,0 +1,22 @@
+{% extends 'archive/base.html' %}{% block content %}
+<a href="{% url 'gallery' %}">返回相册</a><h1>{% if restore_confirmation %}核对恢复{% elif confirmation_photo %}核对移入回收站{% else %}回收站{% endif %}</h1>
+<p>原图、鸟种关联与全部整理信息均保留，可以恢复。不会永久删除或自动清空。</p>
+{% if confirmation_photo %}
+{% if restore_confirmation %}<p>本次明确恢复 1 张照片；回收前位置：{{ restore_path }}。原位置被占用时自动加短后缀，两份文件保留，完成后显示实际位置。</p>{% else %}<p>本次明确移入 1 张照片；确认受理后立即从正常相册和鸟种计数移除，文件由后台移动。</p>{% endif %}
+<a href="{% url 'detail' confirmation_photo.pk %}"><img src="{% url 'media' confirmation_photo.pk 'thumb' %}" width="240" height="180" alt="待回收照片"></a>
+<p>{{ confirmation_photo.pk }} · 当前位置：{{ confirmation_photo.managed_original.relative_path }}</p>
+<form method="post" action="{% url 'detail' confirmation_photo.pk %}">{% csrf_token %}{% if restore_confirmation %}<input type="hidden" name="management_action" value="restore"><input type="hidden" name="restore_token" value="{{ restore_token }}"><button>确认恢复</button>{% else %}<input type="hidden" name="management_action" value="trash"><input type="hidden" name="trash_token" value="{{ trash_token }}"><button>确认移入回收站</button>{% endif %}</form><a href="{% url 'detail' confirmation_photo.pk %}">取消</a>
+{% else %}
+<p>共 {{ trash_page.paginator.count }} 张。回收及恢复期间只读，可以查看、下载原图和重试原操作。</p>
+<form id="management-selection" data-management-selection data-management-scope="trash" method="post" action="{% url 'management-preview' %}">{% csrf_token %}<input type="hidden" name="action" value="restore"><input type="hidden" name="choose" value="1"><span data-management-count role="status">已选 0 张</span><span data-management-hidden></span><button type="button" data-management-clear>清除选择</button><button>核对批量恢复</button><p data-management-message role="status">只恢复明确选择的已完成回收照片。</p></form>
+<div class="photo-grid">{% for photo in trash_page %}<article class="photo-card" id="trash-{{ photo.pk }}">
+{% if photo.trashed_at %}<label><input data-management-photo type="checkbox" name="photo_ids" value="{{ photo.pk }}" form="management-selection">选择恢复此照片</label>{% endif %}
+<a href="{% url 'detail' photo.pk %}?return=trash"><img loading="lazy" src="{% url 'media' photo.pk 'thumb' %}" width="240" height="180" alt="查看回收照片"></a>
+<p>{{ photo.pk }}</p><p>{{ photo.trash_operation.status_label }} · {{ photo.trash_operation.stage_label }}</p>
+{% if photo.trash_operation.error_code %}<p role="status">{{ photo.trash_operation.display_error }}（{{ photo.trash_operation.error_code }}）</p>{% endif %}
+<p>当前登记位置：{{ photo.managed_original.relative_path }}</p>
+<a href="{% url 'download-original' photo.pk %}">下载原图</a> <a href="{% url 'detail' photo.pk %}?return=trash#restore">查看恢复与操作状态</a>
+</article>{% empty %}<p>回收站暂无照片。</p>{% endfor %}</div>
+{% if trash_page.has_previous %}<a href="?view=trash&amp;page={{ trash_page.previous_page_number }}">上一页</a>{% endif %}
+{% if trash_page.has_next %}<a href="?view=trash&amp;page={{ trash_page.next_page_number }}">下一页</a>{% endif %}
+{% endif %}{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'archive/base.html' %}
+{% block title %}鸟种查询 · 栖羽{% endblock %}
+{% block content %}
+<h1>鸟种查询</h1>
+<form method="get" action="{% url 'catalog' %}" data-submit-state="正在查询…">
+  <label for="catalog-query">中文名／学名</label>
+  <input id="catalog-query" name="q" value="{{ query }}" maxlength="200" aria-describedby="catalog-help{% if error_message %} catalog-error{% endif %}">
+  <p id="catalog-help">最多 200 个字符</p>
+  <button type="submit">查询</button>
+</form>
+{% if error_message %}<p id="catalog-error" class="error" role="alert">{{ error_message }}</p><a href="{% url 'catalog' %}?q={{ query|urlencode }}">重试</a>
+{% elif not configured %}<p class="empty">尚无可用名录。请导入已核验的名录快照后重试。</p>
+{% elif not query %}<p class="empty">输入中文名或学名，查询可用的全球鸟种记录。</p>
+{% else %}
+<p role="status">{{ page_obj.paginator.count }} 种</p>
+<section class="photo-grid" aria-label="查询结果">
+{% for species in page_obj %}
+<article class="photo-card">
+  <h2>{% if species.chinese_name %}{{ species.chinese_name }}{% else %}{{ species.scientific_name }}{% endif %}</h2>
+  {% if species.chinese_name %}<p>{{ species.scientific_name }}</p>{% else %}<p>中文名暂缺</p>{% endif %}
+  <details style="margin:16px"><summary>来源／详情</summary>
+    <dl><dt>中文名</dt><dd>{{ species.chinese_name|default:'中文名暂缺' }}</dd>
+    <dt>学名</dt><dd>{{ species.scientific_name }}</dd>
+    <dt>稳定 ID</dt><dd>{{ species.id }}</dd>
+    <dt>名录</dt><dd>{{ species.source_snapshot.source }} · {{ species.source_snapshot.version }}</dd>
+    <dt>资料日期</dt><dd>{{ species.source_snapshot.acquired_at|date:'Y-m-d' }}</dd>
+    <dt>署名</dt><dd>{{ species.source_snapshot.attribution }}</dd>
+    <dt>许可</dt><dd><a href="{{ species.source_snapshot.license_url }}" rel="noreferrer">许可说明</a></dd></dl>
+  </details>
+</article>
+{% empty %}<p class="empty">未找到相关鸟种。请尝试学名或其他名称。</p>{% endfor %}
+</section>
+{% if page_obj.paginator.num_pages > 1 %}<nav aria-label="结果分页">
+{% if page_obj.has_previous %}<a href="?q={{ query|urlencode }}&amp;page={{ page_obj.previous_page_number }}">上一页</a>{% endif %}
+<span>{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+{% if page_obj.has_next %}<a href="?q={{ query|urlencode }}&amp;page={{ page_obj.next_page_number }}">下一页</a>{% endif %}
+</nav>{% endif %}
+{% endif %}
+{% endblock %}

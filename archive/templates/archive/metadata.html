@@ -1,0 +1,35 @@
+{% extends 'archive/base.html' %}{% block content %}
+<a href="{% url 'workbench' %}?filter={{ return_filter|urlencode }}&amp;page={{ return_page|urlencode }}">返回</a>
+<h1 tabindex="-1" data-form-heading>{% if mode == 'capture' %}补充时间{% else %}填写地点{% endif %}</h1>
+{% if error_message or form.errors %}<div id="form-errors" class="error" role="alert" tabindex="-1" data-error-summary>{% if error_message %}<p>{{ error_message }}</p>{% endif %}{% for field in form %}{% if field.errors %}<a href="#{{ field.id_for_label }}">{{ field.label }}：{{ field.errors|striptags }}</a>{% endif %}{% endfor %}{{ form.non_field_errors }}</div>{% endif %}
+{% if conflict_details %}<section aria-label="冲突照片"><h2>冲突照片</h2>{% for item in conflict_details %}<article><p>{% if item.available %}<a href="{% url 'detail' item.id %}">{{ item.name }}</a>{% else %}{{ item.name }} · 照片已不可用{% endif %}</p>{% if item.available %}<p>当前地点：{{ item.current_location|default:'未知' }}</p>{% endif %}<p>待保存地点：{{ new_location|default:'未知' }}</p><details><summary>照片标识</summary><p>{{ item.id }}</p></details></article>{% endfor %}</section>{% endif %}
+{% if mode == 'capture' %}
+<p>当前时间：{{ photo.capture_display }} · {{ photo.capture_source }}</p>
+<form method="get" action="{% url 'capture-time' photo.id %}">
+<input type="hidden" name="filter" value="{{ return_filter }}"><input type="hidden" name="page" value="{{ return_page }}">
+{{ form.version }}{{ form.date.label_tag }}{{ form.date }}{{ form.time.label_tag }}{{ form.time }}{{ form.offset.label_tag }}{{ form.offset }}
+<details><summary>时间说明</summary><p>可只填写日期；未填 UTC 偏移时保留当地时间，不推测时区。</p></details>
+{% if photo.can_fill_capture %}<button type="submit">预览</button>{% endif %}</form>
+{% if capture_value %}<p>补充值：{{ capture_value.local }} · {% if capture_value.precision == 'date' %}日期{% else %}秒{% endif %}{% if capture_value.offset == None %} · 时区未知{% else %} · UTC {{ form.offset.value }}{% endif %}</p>{% endif %}
+{% if snapshot %}<form method="post" action="{% url 'capture-time' photo.id %}" data-pending-text="保存中…">{% csrf_token %}
+<input type="hidden" name="snapshot" value="{{ snapshot }}"><input type="hidden" name="version" value="{{ photo.metadata_version }}">
+<input type="hidden" name="date" value="{{ form.date.value|default:'' }}"><input type="hidden" name="time" value="{{ form.time.value|default:'' }}"><input type="hidden" name="offset" value="{{ form.offset.value|default:'' }}">
+<input type="hidden" name="filter" value="{{ return_filter }}"><input type="hidden" name="page" value="{{ return_page }}"><button type="submit">保存时间</button></form>{% endif %}
+{% else %}
+<form method="get" action="{% url 'location' %}">
+<input type="hidden" name="page_snapshot" value="{{ page_snapshot }}">
+{% for photo in photos %}<input type="hidden" name="photo_ids" value="{{ photo.id }}">{% endfor %}
+{{ form.filter }}{{ form.page }}
+{{ form.location.label_tag }}{{ form.location }}
+<p id="location-help" class="field-help">最多 200 字</p>
+<button type="submit">预览</button>
+</form>
+{% if photos %}<p>本页 {{ photos|length }} 张{% if snapshot %} · 将更新 {{ photos|length }} 张{% endif %}</p>
+<ul>{% for photo in photos %}<li><a href="{% url 'detail' photo.id %}">{{ photo.display_name }}</a><dl><dt>原地点</dt><dd>{{ photo.user_location|default:'未知' }}</dd>{% if new_location %}<dt>新地点</dt><dd>{{ new_location }}</dd>{% endif %}</dl></li>{% endfor %}</ul>{% endif %}
+{% if snapshot %}<form method="post" action="{% url 'location' %}" data-pending-text="保存中…">{% csrf_token %}
+<input type="hidden" name="snapshot" value="{{ snapshot }}">
+<input type="hidden" name="location" value="{{ new_location }}"><input type="hidden" name="filter" value="{{ return_filter }}"><input type="hidden" name="page" value="{{ return_page }}">
+{% for photo in photos %}<input type="hidden" name="photo_ids" value="{{ photo.id }}"><input type="hidden" name="version_{{ photo.id }}" value="{{ photo.metadata_version }}">{% endfor %}
+<button type="submit">保存地点</button></form>{% endif %}
+{% endif %}
+{% endblock %}

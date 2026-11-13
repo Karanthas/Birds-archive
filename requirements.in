@@ -1,0 +1,5 @@
+# Python 3.12；只安装基础运行依赖。
+Django==5.2.18
+Pillow==12.3.0
+gunicorn==26.2.0
+whitenoise==6.12.0

@@ -1,0 +1,35 @@
+{% extends 'archive/base.html' %}{% block content %}
+<div class="page-heading"><h1>导入</h1><span data-workbench-counts>照片 {{ photo_count }} 张 · 重复来源 {{ duplicate_count }} 项</span></div>
+{% include 'archive/recognition_status.html' %}
+<section class="status-strip" data-summary-poll="{% url 'task-status' %}" data-filter="{{ filter_name }}" data-page="{{ page_obj.number }}" aria-label="导入状态">
+<span data-summary-value>任务 {{ jobs|length }} 项</span><time data-last-success datetime="{{ status_checked_at|date:'c' }}">{{ status_checked_at|date:'H:i:s' }} UTC</time>
+<a href="?filter={{ filter_name }}&amp;page={{ page_obj.number }}" data-refresh-status>刷新状态</a><span data-refresh-message role="status" aria-live="polite"></span></section>
+<nav aria-label="导入筛选"><a href="?filter=all" {% if filter_name == 'all' %}aria-current="page"{% endif %}>全部</a><a href="?filter=pending" {% if filter_name == 'pending' %}aria-current="page"{% endif %}>待处理</a><a href="?filter=running" {% if filter_name == 'running' %}aria-current="page"{% endif %}>处理中</a><a href="?filter=review" {% if filter_name == 'review' %}aria-current="page"{% endif %}>待确认</a><a href="?filter=failed" {% if filter_name == 'failed' %}aria-current="page"{% endif %}>失败</a><a href="?filter=duplicate" {% if filter_name == 'duplicate' %}aria-current="page"{% endif %}>重复</a></nav>
+{% if scan_diagnostic %}<p role="status">{{ scan_diagnostic }}</p>{% endif %}
+{% if saved_message %}<p role="status">{{ saved_message }}</p>{% endif %}
+{% if filter_name != 'all' %}<p class="filter-count">{{ page_obj.paginator.count }} 项</p>{% endif %}
+<form method="get" action="{% url 'location' %}" data-selection data-review-selection><input type="hidden" name="mode" value="own"><input type="hidden" name="filter" value="{{ filter_name }}"><input type="hidden" name="page" value="{{ page_obj.number }}"><input type="hidden" name="page_snapshot" value="{{ page_snapshot }}">
+<label class="selection-page"><input type="checkbox" data-selection-all hidden>本页全选</label>
+<noscript><p>未启用脚本：仅选择本页照片，翻页不保存勾选。</p></noscript>
+<p class="field-help" data-selection-message role="status" aria-live="polite"></p>
+<div class="photo-grid">
+{% for row in display_rows %}
+<article class="photo-card{% if row.kind != 'photo' %} source-card{% endif %}">
+{% if row.kind == 'photo' %}
+{% if row.photo.state == 'review_pending' %}<label class="photo-select"><input type="checkbox" name="photo_ids" value="{{ row.photo.id }}" aria-label="选择 {{ row.photo.display_name }}">选择</label>{% endif %}
+<a href="{% url 'detail' row.photo.id %}?filter={{ filter_name }}&amp;page={{ page_obj.number }}"><div class="image-frame">{% if row.photo.preview_key %}<img loading="lazy" width="480" height="360" src="{% url 'media' row.photo.id 'thumb' %}" alt="{{ row.photo.display_name }}"><span class="media-error" hidden>暂无预览</span>{% else %}<span>暂无预览</span>{% endif %}</div><h2>{{ row.photo.display_name }}</h2></a>
+<p>{{ row.photo.state_display }}</p>{% if not row.photo.original_available %}<p>原图当前不可用</p>{% endif %}
+{% include 'archive/recognition_status.html' with status_row_only=True photo=row.photo recognition=row.recognition %}
+{% elif row.kind == 'duplicate' %}
+<h2>{{ row.source.display_path }}</h2><p>重复来源</p><a href="{% url 'detail' row.source.photo_id %}?filter={{ filter_name }}&amp;page={{ page_obj.number }}">查看已有照片</a><details><summary>文件信息</summary><p>导入文件已保留</p><p>版本 {{ row.source.observed_version }}</p></details>
+{% else %}
+<h2>{{ row.source.display_path }}</h2><p>{% if row.source.display_state == 'waiting' %}等待写完{% elif row.source.display_state == 'running' %}处理中{% elif row.source.display_state == 'failed' %}导入失败{% elif row.source.display_state == 'retry_wait' %}等待重试{% elif row.source.display_state == 'stale' %}来源已变化{% else %}待处理{% endif %}</p>{% if row.source.display_state == 'failed' %}<a href="{% url 'tasks' %}?state=failed">查看失败任务</a>{% endif %}
+{% endif %}
+</article>
+{% empty %}<p class="empty">{% if filter_name == 'duplicate' %}暂无重复来源{% elif filter_name == 'pending' %}暂无待处理照片{% elif filter_name != 'all' %}暂无符合条件的照片{% else %}暂无导入照片{% endif %}{% if filter_name != 'all' %} · <a href="?filter=all">清除筛选</a>{% endif %}</p>{% endfor %}
+</div>
+<div class="selection-tools" data-selection-tools><span data-selection-count aria-live="polite">本页选择</span><span>核对全部</span><button type="submit" formmethod="post" formaction="{% url 'batch-preview' %}" name="csrfmiddlewaretoken" value="{{ csrf_token }}" data-review-species="own">确认各自候选</button><button type="submit" formmethod="post" formaction="{% url 'batch-preview' %}?mode=uniform_species" name="csrfmiddlewaretoken" value="{{ csrf_token }}" data-review-species="uniform_species">统一设置鸟种集合</button><button type="button" class="quiet" data-selection-clear hidden>清空选择</button><button type="submit" class="quiet">填写地点（仅本页）</button></div></form>
+{% if page_obj.paginator.num_pages > 1 %}<nav aria-label="分页">{% if page_obj.has_previous %}<a href="?filter={{ filter_name }}&amp;page={{ page_obj.previous_page_number }}">上一页</a>{% endif %}<span>{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>{% if page_obj.has_next %}<a href="?filter={{ filter_name }}&amp;page={{ page_obj.next_page_number }}">下一页</a>{% endif %}</nav>{% endif %}
+{% if jobs %}<p><a href="{% url 'tasks' %}">查看任务（{{ jobs|length }}）</a></p>{% endif %}
+<details><summary>导入说明</summary><p>普通复制通过稳定观察检查，长时间暂停不能证明已写完。关闭全部写句柄后发布、且不再修改，才是可靠交接。</p></details>
+{% endblock %}

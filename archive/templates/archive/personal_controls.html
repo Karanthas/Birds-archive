@@ -1,0 +1,12 @@
+{% if not photo.trash_requested_at and not photo.trashed_at %}
+<div data-personal-controls data-photo-id="{{ photo.pk }}" data-version="{{ photo.metadata_version }}">
+<form method="post" action="{% url 'detail' photo.pk %}" data-personal-quick>{% csrf_token %}
+<input type="hidden" name="management_action" value="personal"><input type="hidden" name="personal_field" value="favorite"><input type="hidden" name="metadata_version" value="{{ photo.metadata_version }}"><input type="hidden" name="request_id" value="{{ personal_request_id }}">
+{% if gallery_card %}<input type="hidden" name="personal_return" value="gallery"><input type="hidden" name="gallery_query" value="{{ gallery_return_query }}">{% endif %}
+<button name="favorite" value="{{ photo.favorite|yesno:'false,true' }}" aria-label="{{ photo.favorite|yesno:'取消收藏,收藏照片' }}" aria-pressed="{{ photo.favorite|yesno:'true,false' }}" data-favorite>{{ photo.favorite|yesno:'♥ 已收藏,♡ 收藏' }}</button></form>
+<form method="post" action="{% url 'detail' photo.pk %}" data-personal-quick>{% csrf_token %}
+<input type="hidden" name="management_action" value="personal"><input type="hidden" name="personal_field" value="rating"><input type="hidden" name="metadata_version" value="{{ photo.metadata_version }}"><input type="hidden" name="request_id" value="{{ personal_request_id }}">
+{% if gallery_card %}<input type="hidden" name="personal_return" value="gallery"><input type="hidden" name="gallery_query" value="{{ gallery_return_query }}">{% endif %}
+{% for star in '12345' %}<button name="rating" value="{{ star }}" aria-label="设为{{ star }}星" aria-pressed="{% if photo.rating|stringformat:'s' == star %}true{% else %}false{% endif %}" data-rating>{{ star }}★</button>{% endfor %}<button name="rating" value="" aria-label="清除评分" data-rating aria-pressed="{{ photo.rating|yesno:'false,true' }}">清星</button>
+</form><span data-personal-message role="status" aria-live="polite">{% if photo.rating %}{{ photo.rating }} 星{% else %}未评分{% endif %}</span></div>
+{% endif %}

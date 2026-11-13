@@ -1,0 +1,48 @@
+{% extends 'archive/base.html' %}{% block content %}
+<div class="page-heading"><h1>{% if has_results %}批量结果{% elif uniform_setup or preview.mode == 'uniform_species' %}统一设置鸟种集合{% else %}确认各自候选{% endif %}</h1><a href="{% url 'workbench' %}">重新选择</a></div>
+{% if error_message %}<p role="alert">{{ error_message }}</p>{% endif %}
+{% if uniform_setup %}
+<p>已选 {{ total }} 张 · 先指定集合，再逐张核对</p>
+<form method="post" action="{% url 'batch-preview' %}">{% csrf_token %}
+<input type="hidden" name="mode" value="uniform_species">{% for id in photo_ids %}<input type="hidden" name="photo_ids" value="{{ id }}">{% endfor %}
+<label>搜索全球鸟种<input name="q" value="{{ q }}" maxlength="200"></label><button type="submit" name="action" value="search">搜索</button>
+<fieldset><legend>统一最终鸟种（可多选）</legend>
+{% for species in selected_species %}<label><input type="checkbox" name="species_ids" value="{{ species.id }}" checked>{{ species.display_name }}{% if species.scientific_name %} · {{ species.scientific_name }}{% endif %}{% if species.source_kind == 'local' %} · 本地名{% endif %}</label>{% endfor %}
+{% for species in search_page %}{% if species.id|stringformat:'s' not in selected_ids %}<label><input type="checkbox" name="species_ids" value="{{ species.id }}">{{ species.display_name }}{% if species.scientific_name %} · {{ species.scientific_name }}{% endif %}{% if species.source_kind == 'local' %} · 本地名{% endif %}</label>{% endif %}{% empty %}{% if q %}<p>暂无匹配</p>{% endif %}{% endfor %}</fieldset>
+{% if search_page.has_previous %}<button type="submit" name="species_page" value="{{ search_page.previous_page_number }}" formaction="{% url 'batch-preview' %}?action=page">上一页鸟种</button>{% endif %}
+{% if search_page.has_next %}<button type="submit" name="species_page" value="{{ search_page.next_page_number }}" formaction="{% url 'batch-preview' %}?action=page">下一页鸟种</button>{% endif %}
+<fieldset><legend>名录外鸟名（保存为可复用本地名）</legend>{% for name in local_names %}<input name="local_names" value="{{ name }}" maxlength="300" aria-label="本地鸟名">{% endfor %}<input name="local_names" maxlength="300" aria-label="添加本地鸟名"><input name="local_names" maxlength="300" aria-label="添加另一鸟名"></fieldset>
+<button class="quiet" type="submit" name="action" value="append">继续添加</button><button type="submit" name="action" value="preview">核对全部 {{ total }} 张</button>
+</form>{% endif %}
+{% if preview %}
+<p>共 {{ total }} 张{% if not has_results %} · 将受理 {{ ready_count }} 张 · 跳过 {{ skip_count }} 张{% endif %} · 修订 {{ preview.revision }}</p>
+{% if latest.id != preview.id %}<p>此预览已有新修订。<a href="{% url 'batch-display' latest.id %}">查看当前预览</a></p>{% endif %}
+<div class="photo-grid">
+{% for row in rows %}<article class="photo-card" data-batch-row="{{ row.photo_id }}">
+{% if not row.identity.missing %}<a href="{% url 'detail' row.photo_id %}"><img loading="lazy" width="480" height="360" src="{% url 'media' row.photo_id 'thumb' %}" alt="{{ row.name }}"></a>{% endif %}
+<h2>{{ row.name }}</h2><p>{{ row.original_state }}</p>
+{% if preview.mode == 'uniform_species' %}<p>原人工集合：{% for label in row.previous_labels %}{{ label }}{% if not forloop.last %}、{% endif %}{% empty %}未确认{% endfor %} · {% if row.reason_code == 'not_review_pending' %}保留原决定，跳过{% else %}替换为以下明确集合{% endif %}</p>{% endif %}
+<p>最终鸟种：{% for label in row.labels %}{{ label }}{% if not forloop.last %}、{% endif %}{% endfor %}{% for name in row.local_names %}{% if row.labels or not forloop.first %}、{% endif %}{{ name }}（本地名）{% endfor %}{% if not row.labels and not row.local_names %}未选择{% endif %}</p>
+{% if row.manual_override %}<p>人工指定{% if row.final_count > 1 %} · 多鸟种{% else %} · 单鸟种{% endif %}</p>{% endif %}
+{% if row.result %}<p role="status">{{ row.result_label }} · {{ row.result_reason }}</p>
+{% elif row.excluded or row.reason_code %}<p>{{ row.skip_reason }}</p>{% endif %}
+<details><summary>来源</summary><p>{{ row.source_label }}</p><p>{{ row.photo_id }}</p></details>
+{% if row.editing and not editable %}<details open><summary>未保存草稿</summary>{% for species in row.selected_species %}<p>{{ species.display_name }}</p>{% endfor %}{% for name in row.draft_names %}<p>{{ name }}</p>{% endfor %}<p>{{ row.q }}</p></details>{% endif %}
+{% if editable %}
+<form method="post" action="{% url 'batch-revise' preview.id %}">{% csrf_token %}<input type="hidden" name="token" value="{{ token }}"><input type="hidden" name="photo_id" value="{{ row.photo_id }}">
+{% if row.excluded %}<button type="submit" name="action" value="include">重新纳入</button>{% else %}<button class="quiet" type="submit" name="action" value="exclude">排除此张</button>{% endif %}
+<details {% if row.editing %}open{% endif %}><summary>手动补选</summary>
+<label>搜索全球鸟种<input name="q" value="{{ row.q }}" maxlength="200"></label><button type="submit" name="action" value="search">搜索</button>
+<fieldset><legend>最终鸟种（可多选）</legend>
+{% for species in row.selected_species %}<label><input type="checkbox" name="species_ids" value="{{ species.id }}" checked>{{ species.display_name }}{% if species.scientific_name %} · {{ species.scientific_name }}{% endif %}</label>{% endfor %}
+{% for species in row.search_page %}{% if species.id|stringformat:'s' not in row.selected_ids %}<label><input type="checkbox" name="species_ids" value="{{ species.id }}">{{ species.display_name }}{% if species.scientific_name %} · {{ species.scientific_name }}{% endif %}{% if species.source_kind == 'local' %} · 本地名{% endif %}</label>{% endif %}{% empty %}{% if row.q %}<p>暂无匹配</p>{% endif %}{% endfor %}
+</fieldset>
+{% if row.search_page.has_previous %}<button class="quiet" type="submit" name="species_page" value="{{ row.search_page.previous_page_number }}" formaction="{% url 'batch-revise' preview.id %}?action=page">上一页鸟种</button>{% endif %}
+{% if row.search_page.has_next %}<button class="quiet" type="submit" name="species_page" value="{{ row.search_page.next_page_number }}" formaction="{% url 'batch-revise' preview.id %}?action=page">下一页鸟种</button>{% endif %}
+<fieldset><legend>本地鸟名</legend>{% for name in row.draft_names %}<input name="local_names" value="{{ name }}" maxlength="300" aria-label="本地鸟名">{% endfor %}<input name="local_names" maxlength="300" aria-label="添加本地鸟名"><input name="local_names" maxlength="300" aria-label="添加另一鸟名"></fieldset>
+<button class="quiet" type="submit" name="action" value="append">继续添加</button><button type="submit" name="action" value="save">保存补选并核对</button>
+</details></form>{% endif %}
+</article>{% endfor %}</div>
+{% if editable %}<form method="post" action="{% url 'batch-submit' preview.id %}">{% csrf_token %}<input type="hidden" name="token" value="{{ token }}"><button type="submit" name="confirm" value="yes">确认以上 {{ total }} 张</button></form>{% endif %}
+{% if has_results %}<p>受理后由后台归档。<a href="{% url 'tasks' %}">查看归档进度</a></p>{% endif %}
+{% endif %}{% endblock %}

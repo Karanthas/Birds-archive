@@ -1,0 +1,120 @@
+{
+  "boundaries": [
+    "software providers are synthetic controls, not real-model evidence",
+    "public operational image reuse adds no accuracy denominator",
+    "private-photo generalization and training overlap unknown",
+    "cross-mount/hardware-power-loss/private-production/Tunnel remain Phase6",
+    "no Git writes"
+  ],
+  "decision_coverage": {
+    "D-01_D-03": "03-10 scientific selection plus r12 real new-only activation; r16 scoped resource PASS",
+    "D-04_D-12": "r12 real candidates; r16 explicit single/multi/crosspage both modes, partial skips, replay, archive/download byte consistency PASS",
+    "D-13_D-16": "r12 actual FIFO and new-only activation; existing retry/rerun/focus controls reused, no additional matrix"
+  },
+  "final_acceptance": {
+    "date": "2026-10-23",
+    "full_suite_reruns": 0,
+    "method": "existing_evidence_reuse",
+    "new_model_evaluations": 0,
+    "new_user_retest": false,
+    "review": ".planning/phases/03-recognition-batch-review/evidence/final-acceptance/evidence-review.json",
+    "uat": ".planning/phases/03-recognition-batch-review/03-UAT.md",
+    "verification": ".planning/phases/03-recognition-batch-review/03-VERIFICATION.md"
+  },
+  "latest_operational_run": {
+    "batch_confirmed": 3,
+    "batch_skipped": 2,
+    "downloads_verified": 5,
+    "driver_corrections_applied": [
+      "browser_selection",
+      "resource_port"
+    ],
+    "full_test_suite_reruns": 0,
+    "model_runs": 0,
+    "new_archived": 5,
+    "new_scientific_samples": 0,
+    "ref": ".planning/phases/03-recognition-batch-review/evidence/03-11/actual-selected-delivery-r14/semantic-audit.json",
+    "resource_result": "PASS",
+    "reused_candidates": 75,
+    "reused_inference_succeeded": 25,
+    "run_id": "904faed1-36d3-4743-86be-9246be2ec431",
+    "total_archived": 6
+  },
+  "layers": {
+    "browser": {
+      "latest_ref": ".planning/phases/03-recognition-batch-review/evidence/03-11/actual-selected-delivery-r14/semantic-audit.json",
+      "old_get_500_post_503": "deferred_unresolved_not_fixed",
+      "prior_ref": "docs/recognition/browser-evidence.json",
+      "status": "selected_real_candidates_single_multi_crosspage_both_modes_replay_archive_download_pass"
+    },
+    "nas": {
+      "latest_ref": ".planning/phases/03-recognition-batch-review/evidence/03-11/actual-selected-delivery-r14/semantic-audit.json",
+      "latest_run_id": "904faed1-36d3-4743-86be-9246be2ec431",
+      "original_ssh_commands": 177,
+      "ref": ".planning/phases/03-recognition-batch-review/03-10-SUMMARY.md",
+      "selected_app_actual_actions": null,
+      "sole_actor": "/root",
+      "status": "remaining_flow_resource_cleanup_pass"
+    },
+    "process": {
+      "linux_skipped": 0,
+      "linux_tests": 46,
+      "ref": ".planning/phases/03-recognition-batch-review/03-10-SUMMARY.md",
+      "status": "prior_nas_evidence"
+    },
+    "real_model": {
+      "calibration_n": 14,
+      "evaluation_n": 7,
+      "mapping_failure_images": 7,
+      "new_scientific_samples": 0,
+      "ref": "docs/recognition/nas-baseline",
+      "run_id": "d31b044a-7a97-4fcd-85bd-8c028f0052cf",
+      "status": "qualified_selection_evidence",
+      "threshold_skipped_images": 7
+    },
+    "software": {
+      "adapter_mapping_tests": 39,
+      "django_exit": 0,
+      "django_seconds": 117.281,
+      "django_skipped": 0,
+      "django_tests": 524,
+      "javascript_syntax": "pass",
+      "latest_run_reused_full_suite": true,
+      "migration_drift": "none",
+      "node_failures": 0,
+      "node_tests": 13,
+      "product_fix_ref": ".planning/phases/03-recognition-batch-review/evidence/03-11/product-fix/overflow-r2/result.json",
+      "raw_ref": ".planning/phases/03-recognition-batch-review/evidence/03-11/product-fix/overflow-r2/full.stdout-stderr.log",
+      "status": "pass",
+      "system_check": "pass",
+      "targeted_seconds": 29.822,
+      "targeted_tests": 115
+    }
+  },
+  "phase": "03",
+  "plan": "03-11",
+  "previous_operational_run": {
+    "batch_confirmed": 0,
+    "candidates": 75,
+    "corrections_prepared_not_executed": [
+      "browser_selection",
+      "resource_port"
+    ],
+    "inference_succeeded": 25,
+    "manual_archived": 1,
+    "new_scientific_samples": 0,
+    "ref": ".planning/phases/03-recognition-batch-review/evidence/03-11/actual-selected-delivery-r10/semantic-audit.json",
+    "resource_result": "FAIL: hardcoded expected8771 vs approved8776",
+    "run_id": "ca9ac309-3d4e-4e6b-a10e-2ea7dbdfe32d"
+  },
+  "requirements_completed": [
+    "EVAL-01",
+    "EVAL-02",
+    "ID-01",
+    "ID-04",
+    "ID-05"
+  ],
+  "schema_version": 1,
+  "selection_ref": "docs/recognition/selection.json",
+  "status": "phase_verified_with_deferred_items"
+}
